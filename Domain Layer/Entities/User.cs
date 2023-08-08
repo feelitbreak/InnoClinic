@@ -1,4 +1,6 @@
-﻿namespace Domain_Layer.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Domain_Layer.Entities
 {
     public class User
     {
