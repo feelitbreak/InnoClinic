@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using InnoClinic.Infrastructure;
+using InnoClinic.Domain.Repositories;
 using InnoClinic.Domain.Entities;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace InnoClinic.Controllers
 {
@@ -12,16 +8,28 @@ namespace InnoClinic.Controllers
     [Route("[controller]")]
     public class AuthorizationController : ControllerBase
     {
-        private readonly ClinicDbContext _context;
+        private readonly IUserRepository _userRep;
 
-        public AuthorizationController(ClinicDbContext context)
+        public AuthorizationController(IUserRepository userRep)
         {
-            _context = context;
+            _userRep = userRep;
         }
 
         [HttpPost(Name = "SignUp")]
         public IActionResult Post([FromBody] User userSignUp)
         {
+            if (userSignUp is null)
+            {
+                return BadRequest();
+            }
+
+            if (!userSignUp.Password.Equals(userSignUp.ReenteredPassword))
+            {
+                return BadRequest("The passwords you’ve entered don’t coincide");
+            }
+
+            _userRep.AddUser(userSignUp);
+
             return Ok();
         }
     }
