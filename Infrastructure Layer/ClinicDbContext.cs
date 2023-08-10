@@ -33,7 +33,7 @@ namespace Infrastructure_Layer
                 .HasDefaultValue(string.Empty)
                 .HasMaxLength(15);
 
-            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<User>().ToTable("Users");
         }
     }
 }
