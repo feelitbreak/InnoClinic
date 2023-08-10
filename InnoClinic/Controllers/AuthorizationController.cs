@@ -34,6 +34,11 @@ namespace InnoClinic.Controllers
                 return BadRequest("The passwords you’ve entered don’t coincide");
             }
 
+            if (_userRep.CheckUser(userSignUp.Email))
+            {
+                return BadRequest("User with this email already exists");
+            }
+
             _userRep.AddUser(userSignUp);
             var token = GenerateToken(userSignUp);
 

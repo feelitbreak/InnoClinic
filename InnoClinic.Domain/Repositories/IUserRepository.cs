@@ -10,6 +10,6 @@ namespace InnoClinic.Domain.Repositories
 
         public void AddUser(User user);
 
-        public bool CheckUser(int id);
+        public bool CheckUser(string email);
     }
 }

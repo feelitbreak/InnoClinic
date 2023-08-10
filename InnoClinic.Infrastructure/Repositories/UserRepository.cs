@@ -34,9 +34,9 @@ namespace InnoClinic.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public bool CheckUser(int id)
+        public bool CheckUser(string email)
         {
-            return _context.Users.Any(u => u.Id == id);
+            return _context.Users.Any(u => u.Email.Equals(email));
         }
     }
 }
