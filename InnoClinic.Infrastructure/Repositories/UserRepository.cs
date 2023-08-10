@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InnoClinic.Infrastructure.Repositories
 {
-    internal class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly ClinicDbContext _context;
 
