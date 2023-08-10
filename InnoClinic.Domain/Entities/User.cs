@@ -7,12 +7,12 @@ namespace InnoClinic.Domain.Entities
         public int Id { get; set; }
 
         [EmailAddress]
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; }
 
         [MinLength(6)]
-        public string Password { get; set; } = string.Empty;
+        public string Password { get; set; }
 
         [MinLength(6)]
-        public string ReenteredPassword { get; set; } = string.Empty;
+        public string ReenteredPassword { get; set; }
     }
 }
