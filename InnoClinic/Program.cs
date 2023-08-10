@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Infrastructure_Layer;
+using InnoClinic.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

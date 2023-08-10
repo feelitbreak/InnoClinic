@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InnoClinic", "InnoClinic.csproj", "{83C25991-6AE7-460C-BB5B-181E736BF007}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InnoClinic", "InnoClinic.csproj", "{83C25991-6AE7-460C-BB5B-181E736BF007}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain Layer", "..\Domain Layer\Domain Layer.csproj", "{2D5E1BA5-C62C-4FF2-9A76-F9744A612EAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InnoClinic.Domain", "..\InnoClinic.Domain\InnoClinic.Domain.csproj", "{2D5E1BA5-C62C-4FF2-9A76-F9744A612EAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service Layer", "..\Service Layer\Service Layer.csproj", "{593B5982-C8D6-44D0-B675-81C00E03FAE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InnoClinic.Services", "..\InnoClinic.Services\InnoClinic.Services.csproj", "{593B5982-C8D6-44D0-B675-81C00E03FAE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure Layer", "..\Infrastructure Layer\Infrastructure Layer.csproj", "{78105215-C5BD-409A-A905-C248F2561C0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InnoClinic.Infrastructure", "..\InnoClinic.Infrastructure\InnoClinic.Infrastructure.csproj", "{78105215-C5BD-409A-A905-C248F2561C0C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

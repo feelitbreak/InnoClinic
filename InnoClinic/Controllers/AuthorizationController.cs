@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure_Layer;
-using Domain_Layer.Entities;
+using InnoClinic.Infrastructure;
+using InnoClinic.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -22,7 +22,6 @@ namespace InnoClinic.Controllers
         [HttpPost(Name = "SignUp")]
         public IActionResult Post([FromBody] User userSignUp)
         {
-            string str = null;
             return Ok();
         }
     }

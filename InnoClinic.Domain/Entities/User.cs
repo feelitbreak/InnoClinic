@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Domain_Layer.Entities
+namespace InnoClinic.Domain.Entities
 {
     public class User
     {

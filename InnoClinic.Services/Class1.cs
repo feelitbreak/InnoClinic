@@ -1,4 +1,4 @@
-﻿namespace Service_Layer
+﻿namespace InnoClinic.Services
 {
     public class Class1
     {

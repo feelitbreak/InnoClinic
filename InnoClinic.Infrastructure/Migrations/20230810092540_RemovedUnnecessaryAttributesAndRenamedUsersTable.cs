@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Infrastructure_Layer.Migrations
+namespace InnoClinic.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class RemovedUnnecessaryAttributesAndRenamedUsersTable : Migration

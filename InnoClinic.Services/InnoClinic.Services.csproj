@@ -2,9 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>Domain_Layer</RootNamespace>
+    <RootNamespace>InnoClinic.Services</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\InnoClinic.Domain\InnoClinic.Domain.csproj" />
+  </ItemGroup>
 
 </Project>
