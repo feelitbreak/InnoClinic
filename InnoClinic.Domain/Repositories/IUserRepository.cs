@@ -2,11 +2,11 @@
 
 namespace InnoClinic.Domain.Repositories
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
-        public List<User> GetUserDetails();
+        public List<User> GetAllUsers();
 
-        public User GetUserDetails(int id);
+        public User? GetUserById(int id);
 
         public void AddUser(User user);
 
