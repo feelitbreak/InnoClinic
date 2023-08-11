@@ -24,7 +24,27 @@ namespace InnoClinic.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpPost(Name = "SignUp")]
+        [HttpPost("login", Name = "Sign In")]
+        public IActionResult Post(string email, string password)
+        {
+            if (email is null || password is null)
+            {
+                return BadRequest();
+            }
+
+            var user = _userRep.GetUserByEmail(email);
+
+            if (user is null || !user.Password.Equals(password))
+            {
+                return BadRequest("Either an email or a password is incorrect");
+            }
+
+            var token = _tokenService.GenerateToken(_config, user);
+
+            return Ok("You've signed in successfully. Token: " + token);
+        }
+
+        [HttpPost("signup", Name = "SignUp")]
         public IActionResult Post([FromBody] User userSignUp)
         {
             if (userSignUp is null)
@@ -45,7 +65,7 @@ namespace InnoClinic.Controllers
             _userRep.AddUser(userSignUp);
             var token = _tokenService.GenerateToken(_config, userSignUp);
 
-            return Ok(token);
+            return Ok("You've signed up successfully. Token: " + token);
         }
     }
 }

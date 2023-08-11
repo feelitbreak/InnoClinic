@@ -6,7 +6,7 @@ namespace InnoClinic.Domain.Repositories
     {
         public List<User> GetAllUsers();
 
-        public User? GetUserById(int id);
+        public User? GetUserByEmail(string email);
 
         public void AddUser(User user);
 

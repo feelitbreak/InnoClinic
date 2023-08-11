@@ -23,9 +23,9 @@ namespace InnoClinic.Infrastructure.Repositories
             return _context.Users.ToList();
         }
 
-        public User? GetUserById(int id)
+        public User? GetUserByEmail(string email)
         {
-            return _context.Users.Find(id);
+            return _context.Users.SingleOrDefault(u => u.Email.Equals(email));
         }
 
         public void AddUser(User user)
