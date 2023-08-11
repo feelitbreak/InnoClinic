@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using InnoClinic.Services.Abstractions;
 
 namespace InnoClinic.Controllers
 {
@@ -14,11 +15,13 @@ namespace InnoClinic.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IUserRepository _userRep;
+        private readonly ITokenService _tokenService;
 
-        public AuthorizationController(IConfiguration config, IUserRepository userRep)
+        public AuthorizationController(IConfiguration config, IUserRepository userRep, ITokenService tokenService)
         {
             _config = config;
             _userRep = userRep;
+            _tokenService = tokenService;
         }
 
         [HttpPost(Name = "SignUp")]
@@ -40,29 +43,9 @@ namespace InnoClinic.Controllers
             }
 
             _userRep.AddUser(userSignUp);
-            var token = GenerateToken(userSignUp);
+            var token = _tokenService.GenerateToken(_config, userSignUp);
 
             return Ok(token);
-        }
-
-        private string GenerateToken(User user)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Email, user.Email)
-            };
-
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(10),
-                signingCredentials: credentials);
-
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

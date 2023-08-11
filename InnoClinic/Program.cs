@@ -5,6 +5,8 @@ using InnoClinic.Domain.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using InnoClinic.Services.Abstractions;
+using InnoClinic.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<ClinicDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("ClinicDbContext")));
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
     options.TokenValidationParameters = new TokenValidationParameters

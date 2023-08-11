@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\InnoClinic.Domain\InnoClinic.Domain.csproj" />
     <ProjectReference Include="..\InnoClinic.Infrastructure\InnoClinic.Infrastructure.csproj" />
+    <ProjectReference Include="..\InnoClinic.Services\InnoClinic.Services.csproj" />
   </ItemGroup>
 
 </Project>
