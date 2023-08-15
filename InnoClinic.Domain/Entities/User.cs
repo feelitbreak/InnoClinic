@@ -11,8 +11,5 @@ namespace InnoClinic.Domain.Entities
 
         [MinLength(6)]
         public string Password { get; set; }
-
-        [MinLength(6)]
-        public string ReenteredPassword { get; set; }
     }
 }

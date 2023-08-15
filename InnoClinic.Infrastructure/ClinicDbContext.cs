@@ -26,13 +26,6 @@ namespace InnoClinic.Infrastructure
                 .HasDefaultValue(string.Empty)
                 .HasMaxLength(15);
 
-            modelBuilder.Entity<User>()
-                .Property(u => u.ReenteredPassword)
-                .HasColumnName("Re-entered Password")
-                .IsRequired()
-                .HasDefaultValue(string.Empty)
-                .HasMaxLength(15);
-
             modelBuilder.Entity<User>().ToTable("Users");
         }
     }
