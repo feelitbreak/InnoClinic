@@ -13,7 +13,6 @@ namespace InnoClinic.Services
         public MappingProfiles()
         {
             CreateMap<SignUpUserModel, User>();
-            CreateMap<SignInUserModel, User>();
         }
     }
 }
