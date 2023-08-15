@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Domain.Entities
 {
-    public class LoginUserModel
+    public class SignUpUserModel
     {
         [Required]
         [EmailAddress]
@@ -16,5 +16,9 @@ namespace InnoClinic.Domain.Entities
         [Required]
         [MinLength(6), MaxLength(15)]
         public string Password { get; set; }
+
+        [Required]
+        [MinLength(6), MaxLength(15)]
+        public string ReenteredPassword { get; set; }
     }
 }
