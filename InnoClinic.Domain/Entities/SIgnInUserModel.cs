@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Domain.Entities
 {
-    public class SIgnInUserModel
+    public class SignInUserModel
     {
         [Required]
         [EmailAddress]
