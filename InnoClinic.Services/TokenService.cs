@@ -10,14 +10,15 @@ namespace InnoClinic.Services
 {
     public class TokenService : ITokenService
     {
-        public string GenerateToken(IConfiguration _config, User user)
+        public string GenerateToken(IConfiguration _config, User user, string role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, role)
             };
 
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],

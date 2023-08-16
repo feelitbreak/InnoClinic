@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Text;
 using InnoClinic.Services.Abstractions;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InnoClinic.Controllers
 {
@@ -44,7 +45,8 @@ namespace InnoClinic.Controllers
                     return BadRequest("Either an email or a password is incorrect");
                 }
 
-                var token = _tokenService.GenerateToken(_config, user);
+                string role = "User";
+                var token = _tokenService.GenerateToken(_config, user, role);
 
                 return Ok("You've signed in successfully. Token: " + token);
             }
@@ -77,7 +79,8 @@ namespace InnoClinic.Controllers
                 var user = _mapper.Map<User>(userSignUp);
 
                 _userRep.AddUser(user);
-                var token = _tokenService.GenerateToken(_config, user);
+                string role = "User";
+                var token = _tokenService.GenerateToken(_config, user, role);
 
                 return Ok("You've signed up successfully. Token: " + token);
             }
