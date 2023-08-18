@@ -22,6 +22,7 @@ builder.Services.AddDbContext<ClinicDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("ClinicDbContext")));
 builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {

@@ -17,14 +17,14 @@ namespace InnoClinic.Controllers
     {
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
-        private readonly IUserRepository _userRep;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
 
-        public AuthorizationController(IConfiguration config, IMapper mapper, IUserRepository userRep, ITokenService tokenService)
+        public AuthorizationController(IConfiguration config, IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _config = config;
             _mapper = mapper;
-            _userRep = userRep;
+            _unitOfWork = unitOfWork;
             _tokenService = tokenService;
         }
 
@@ -38,7 +38,7 @@ namespace InnoClinic.Controllers
                     return BadRequest();
                 }
 
-                var user = await _userRep.GetByEmailAsync(userSignIn.Email);
+                var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email);
 
                 if (user is null || !user.Password.Equals(userSignIn.Password))
                 {
@@ -71,7 +71,7 @@ namespace InnoClinic.Controllers
                     return BadRequest("The passwords you’ve entered don’t coincide");
                 }
 
-                var userWithSameEmail = await _userRep.GetByEmailAsync(userSignUp.Email);
+                var userWithSameEmail = await _unitOfWork.Users.GetByEmailAsync(userSignUp.Email);
                 if (userWithSameEmail is not null)
                 {
                     return BadRequest("User with this email already exists");
@@ -79,7 +79,9 @@ namespace InnoClinic.Controllers
 
                 var user = _mapper.Map<User>(userSignUp);
 
-                await _userRep.AddAsync(user);
+                await _unitOfWork.Users.AddAsync(user);
+                await _unitOfWork.SaveChangesAsync();
+
                 string role = "User";
                 var token = _tokenService.GenerateToken(_config, user, role);
 
