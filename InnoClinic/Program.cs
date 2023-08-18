@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using InnoClinic.Infrastructure;
 using InnoClinic.Infrastructure.Repositories;
-using InnoClinic.Domain.Repositories;
+using InnoClinic.Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using InnoClinic.Services.Abstractions;
 using InnoClinic.Services;
+using InnoClinic.Infrastructure.Implementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +20,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<ClinicDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("ClinicDbContext")));
+builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 

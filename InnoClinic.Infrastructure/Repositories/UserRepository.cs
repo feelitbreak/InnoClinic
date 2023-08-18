@@ -3,40 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using InnoClinic.Domain.Repositories;
+using InnoClinic.Domain.Interfaces;
 using InnoClinic.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using InnoClinic.Infrastructure.Implementation;
 
 namespace InnoClinic.Infrastructure.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        private readonly ClinicDbContext _context;
-
-        public UserRepository(ClinicDbContext context)
+        public UserRepository(ClinicDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public List<User> GetAllUsers()
+        public async Task<User?> GetByEmailAsync(string email)
         {
-            return _context.Users.ToList();
-        }
-
-        public User? GetUserByEmail(string email)
-        {
-            return _context.Users.SingleOrDefault(u => u.Email.Equals(email));
-        }
-
-        public void AddUser(User user)
-        {
-            _context.Users.Add(user);
-            _context.SaveChanges();
-        }
-
-        public bool CheckUser(string email)
-        {
-            return _context.Users.Any(u => u.Email.Equals(email));
+            return await _dbSet.SingleOrDefaultAsync(u => u.Email.Equals(email));
         }
     }
 }

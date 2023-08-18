@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using InnoClinic.Domain.Repositories;
+using InnoClinic.Domain.Interfaces;
 using InnoClinic.Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,7 +29,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("signin", Name = "Sign In")]
-        public IActionResult Post([FromBody] SignInUserModel userSignIn)
+        public async Task<IActionResult> PostAsync([FromBody] SignInUserModel userSignIn)
         {
             if (ModelState.IsValid)
             {
@@ -38,7 +38,7 @@ namespace InnoClinic.Controllers
                     return BadRequest();
                 }
 
-                var user = _userRep.GetUserByEmail(userSignIn.Email);
+                var user = await _userRep.GetByEmailAsync(userSignIn.Email);
 
                 if (user is null || !user.Password.Equals(userSignIn.Password))
                 {
@@ -57,7 +57,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("signup", Name = "SignUp")]
-        public IActionResult Post([FromBody] SignUpUserModel userSignUp)
+        public async Task<IActionResult> PostAsync([FromBody] SignUpUserModel userSignUp)
         {
             if (ModelState.IsValid)
             {
@@ -71,14 +71,15 @@ namespace InnoClinic.Controllers
                     return BadRequest("The passwords you’ve entered don’t coincide");
                 }
 
-                if (_userRep.CheckUser(userSignUp.Email))
+                var userWithSameEmail = await _userRep.GetByEmailAsync(userSignUp.Email);
+                if (userWithSameEmail is not null)
                 {
                     return BadRequest("User with this email already exists");
                 }
 
                 var user = _mapper.Map<User>(userSignUp);
 
-                _userRep.AddUser(user);
+                await _userRep.AddAsync(user);
                 string role = "User";
                 var token = _tokenService.GenerateToken(_config, user, role);
 

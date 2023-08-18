@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using InnoClinic.Domain.Entities;
 
-namespace InnoClinic.Infrastructure
+namespace InnoClinic.Infrastructure.Implementation
 {
     public class ClinicDbContext : DbContext
     {
