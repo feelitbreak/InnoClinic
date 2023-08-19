@@ -43,10 +43,10 @@ namespace InnoClinic.Controllers
                     return BadRequest("Either an email or a password is incorrect");
                 }
 
-                string role = "User";
+                var role = "User";
                 var token = _tokenService.GenerateToken(_jwtOptions, user, role);
 
-                return Ok("You've signed in successfully. Token: " + token);
+                return Ok(new { token } );
             }
             else
             {
@@ -80,10 +80,10 @@ namespace InnoClinic.Controllers
                 await _unitOfWork.Users.AddAsync(user);
                 await _unitOfWork.SaveChangesAsync();
 
-                string role = "User";
+                var role = "User";
                 var token = _tokenService.GenerateToken(_jwtOptions, user, role);
 
-                return Ok("You've signed up successfully. Token: " + token);
+                return Ok(new { token });
             }
             else
             {
