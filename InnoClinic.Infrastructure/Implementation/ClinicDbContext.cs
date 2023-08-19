@@ -16,14 +16,12 @@ namespace InnoClinic.Infrastructure.Implementation
             modelBuilder.Entity<User>()
                 .Property(u => u.Email)
                 .HasColumnName("E-mail")
-                .IsRequired()
-                .HasDefaultValue(string.Empty);
+                .IsRequired();
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
 
             modelBuilder.Entity<User>()
                 .Property(u => u.Password)
                 .IsRequired()
-                .HasDefaultValue(string.Empty)
                 .HasMaxLength(15);
 
             modelBuilder.Entity<User>().ToTable("Users");
