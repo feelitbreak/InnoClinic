@@ -1,12 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using InnoClinic.Infrastructure.Repositories;
-using InnoClinic.Domain.Interfaces;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using InnoClinic.Services.Abstractions;
-using InnoClinic.Services;
-using InnoClinic.Infrastructure.Implementation;
+using InnoClinic.Extensions;
+using InnoClinic.Services.Extensions;
+using InnoClinic.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,25 +12,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddDbContext<ClinicDbContext>(options => 
-options.UseSqlServer(builder.Configuration.GetConnectionString("ClinicDbContext")));
-builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddTransient<IUserRepository, UserRepository>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<ITokenService, TokenService>();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-    };
-});
+builder.Services.AddSqlServerDb(builder.Configuration);
+builder.Services.AddRepositories();
+builder.Services.AddProjectServices();
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
