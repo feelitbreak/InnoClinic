@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InnoClinic.Domain.Entities
+namespace InnoClinic.Domain.DTOs
 {
-    public class SignInUserModel
+    public class UserSignInDTO
     {
         [Required]
         [EmailAddress]

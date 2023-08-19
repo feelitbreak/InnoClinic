@@ -5,6 +5,7 @@ using InnoClinic.Services.Abstractions;
 using AutoMapper;
 using InnoClinic.Domain.Options;
 using Microsoft.Extensions.Options;
+using InnoClinic.Domain.DTOs;
 
 namespace InnoClinic.Controllers
 {
@@ -26,7 +27,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("signin", Name = "Sign In")]
-        public async Task<IActionResult> PostAsync([FromBody] SignInUserModel userSignIn)
+        public async Task<IActionResult> PostAsync([FromBody] UserSignInDTO userSignIn)
         {
             if (ModelState.IsValid)
             {
@@ -54,7 +55,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("signup", Name = "SignUp")]
-        public async Task<IActionResult> PostAsync([FromBody] SignUpUserModel userSignUp)
+        public async Task<IActionResult> PostAsync([FromBody] UserSignUpDTO userSignUp)
         {
             if (ModelState.IsValid)
             {

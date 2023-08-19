@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using InnoClinic.Domain.Entities;
+using InnoClinic.Domain.DTOs;
 
 namespace InnoClinic.Services
 {
@@ -12,7 +13,7 @@ namespace InnoClinic.Services
     {
         public MappingProfiles()
         {
-            CreateMap<SignUpUserModel, User>();
+            CreateMap<UserSignUpDTO, User>();
         }
     }
 }
