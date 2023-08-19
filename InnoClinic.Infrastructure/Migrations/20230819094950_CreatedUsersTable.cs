@@ -10,7 +10,7 @@ namespace InnoClinic.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            /*migrationBuilder.CreateTable(
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -28,7 +28,7 @@ namespace InnoClinic.Infrastructure.Migrations
                 name: "IX_Users_E-mail",
                 table: "Users",
                 column: "E-mail",
-                unique: true);*/
+                unique: true);
         }
 
         /// <inheritdoc />
