@@ -1,13 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using InnoClinic.Domain.Interfaces;
 using InnoClinic.Domain.Entities;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using InnoClinic.Services.Abstractions;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+using InnoClinic.Domain.Options;
+using Microsoft.Extensions.Options;
 
 namespace InnoClinic.Controllers
 {
@@ -15,17 +12,17 @@ namespace InnoClinic.Controllers
     [Route("[controller]")]
     public class AuthorizationController : ControllerBase
     {
-        private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
+        private readonly JwtOptions _jwtOptions;
 
-        public AuthorizationController(IConfiguration config, IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
+        public AuthorizationController(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtOptions> jwtOptions)
         {
-            _config = config;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
+            _jwtOptions = jwtOptions.Value;
         }
 
         [HttpPost("signin", Name = "Sign In")]
@@ -46,7 +43,7 @@ namespace InnoClinic.Controllers
                 }
 
                 string role = "User";
-                var token = _tokenService.GenerateToken(_config, user, role);
+                var token = _tokenService.GenerateToken(_jwtOptions, user, role);
 
                 return Ok("You've signed in successfully. Token: " + token);
             }
@@ -83,7 +80,7 @@ namespace InnoClinic.Controllers
                 await _unitOfWork.SaveChangesAsync();
 
                 string role = "User";
-                var token = _tokenService.GenerateToken(_config, user, role);
+                var token = _tokenService.GenerateToken(_jwtOptions, user, role);
 
                 return Ok("You've signed up successfully. Token: " + token);
             }

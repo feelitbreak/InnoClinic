@@ -1,4 +1,5 @@
 using InnoClinic.Extensions;
+using InnoClinic.Domain.Extensions;
 using InnoClinic.Services.Extensions;
 using InnoClinic.Infrastructure.Extensions;
 
@@ -16,6 +17,7 @@ builder.Services.AddSqlServerDb(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddProjectServices();
 builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddProjectOptions();
 
 var app = builder.Build();
 

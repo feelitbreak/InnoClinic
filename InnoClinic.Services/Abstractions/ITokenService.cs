@@ -1,5 +1,5 @@
 ﻿using InnoClinic.Domain.Entities;
-using Microsoft.Extensions.Configuration;
+using InnoClinic.Domain.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +10,6 @@ namespace InnoClinic.Services.Abstractions
 {
     public interface ITokenService
     {
-        public string GenerateToken(IConfiguration _config, User user, string role);
+        public string GenerateToken(JwtOptions _jwtOptions, User user, string role);
     }
 }

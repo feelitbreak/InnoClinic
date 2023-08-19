@@ -5,14 +5,16 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
+using InnoClinic.Domain.Options;
+using Microsoft.Extensions.Options;
 
 namespace InnoClinic.Services
 {
     public class TokenService : ITokenService
     {
-        public string GenerateToken(IConfiguration _config, User user, string role)
+        public string GenerateToken(JwtOptions _jwtOptions, User user, string role)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -21,8 +23,8 @@ namespace InnoClinic.Services
                 new Claim(ClaimTypes.Role, role)
             };
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Audience"],
+            var token = new JwtSecurityToken(_jwtOptions.Issuer,
+                _jwtOptions.Audience,
                 claims,
                 expires: DateTime.Now.AddMinutes(10),
                 signingCredentials: credentials);
