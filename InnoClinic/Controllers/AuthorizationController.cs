@@ -16,14 +16,12 @@ namespace InnoClinic.Controllers
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
-        private readonly JwtOptions _jwtOptions;
 
-        public AuthorizationController(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService, IOptions<JwtOptions> jwtOptions)
+        public AuthorizationController(IMapper mapper, IUnitOfWork unitOfWork, ITokenService tokenService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
-            _jwtOptions = jwtOptions.Value;
         }
 
         [HttpPost("signin", Name = "Sign In")]
@@ -44,7 +42,7 @@ namespace InnoClinic.Controllers
                 }
 
                 var role = "User";
-                var token = _tokenService.GenerateToken(_jwtOptions, user, role);
+                var token = _tokenService.GenerateToken(user, role);
 
                 return Ok(new { token } );
             }
@@ -81,7 +79,7 @@ namespace InnoClinic.Controllers
                 await _unitOfWork.SaveChangesAsync();
 
                 var role = "User";
-                var token = _tokenService.GenerateToken(_jwtOptions, user, role);
+                var token = _tokenService.GenerateToken(user, role);
 
                 return Ok(new { token });
             }

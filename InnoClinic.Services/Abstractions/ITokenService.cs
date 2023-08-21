@@ -10,6 +10,6 @@ namespace InnoClinic.Services.Abstractions
 {
     public interface ITokenService
     {
-        public string GenerateToken(JwtOptions _jwtOptions, User user, string role);
+        public string GenerateToken(User user, string role);
     }
 }

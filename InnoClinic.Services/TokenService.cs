@@ -12,7 +12,14 @@ namespace InnoClinic.Services
 {
     public class TokenService : ITokenService
     {
-        public string GenerateToken(JwtOptions _jwtOptions, User user, string role)
+        private readonly JwtOptions _jwtOptions;
+
+        public TokenService(IOptions<JwtOptions> jwtOptions)
+        {
+            _jwtOptions = jwtOptions.Value;
+        }
+
+        public string GenerateToken(User user, string role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
