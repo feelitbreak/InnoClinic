@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InnoClinic.Domain.Entities
 {
@@ -6,10 +8,9 @@ namespace InnoClinic.Domain.Entities
     {
         public int Id { get; set; }
 
-        [EmailAddress]
+        [Column("E-mail")]
         public string Email { get; set; }
 
-        [MinLength(6)]
         public string Password { get; set; }
     }
 }
