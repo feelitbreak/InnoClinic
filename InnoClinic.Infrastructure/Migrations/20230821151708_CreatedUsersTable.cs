@@ -16,19 +16,13 @@ namespace InnoClinic.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(name: "E-mail", type: "nvarchar(450)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false)
+                    Email = table.Column<string>(name: "E-mail", type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_E-mail",
-                table: "Users",
-                column: "E-mail",
-                unique: true);
         }
 
         /// <inheritdoc />
