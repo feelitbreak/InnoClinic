@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Domain.DTOs
 {
-    public class UserSignUpDTO
+    public class UserSignUpDto
     {
         public string Email { get; set; }
 

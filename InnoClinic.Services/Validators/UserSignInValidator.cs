@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Services.Validators
 {
-    public class UserSignInValidator : AbstractValidator<UserSignInDTO>
+    public class UserSignInValidator : AbstractValidator<UserSignInDto>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -31,7 +31,7 @@ namespace InnoClinic.Services.Validators
                 .WithMessage("Either the email or password is incorrect");
         }
 
-        private async Task<bool> IsCorrectSignInAsync(UserSignInDTO user, CancellationToken token)
+        private async Task<bool> IsCorrectSignInAsync(UserSignInDto user, CancellationToken token)
         {
             var userWithSameEmail = await _unitOfWork.Users.GetByEmailAsync(user.Email);
 

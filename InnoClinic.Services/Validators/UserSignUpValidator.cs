@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Services.Validators
 {
-    public class UserSignUpValidator : AbstractValidator<UserSignUpDTO>
+    public class UserSignUpValidator : AbstractValidator<UserSignUpDto>
     {
         private readonly IUnitOfWork _unitOfWork;
 

@@ -15,14 +15,14 @@ namespace InnoClinic.Controllers
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
-        private readonly IValidator<UserSignInDTO> _validatorUserSignIn;
-        private readonly IValidator<UserSignUpDTO> _validatorUserSignUp;
+        private readonly IValidator<UserSignInDto> _validatorUserSignIn;
+        private readonly IValidator<UserSignUpDto> _validatorUserSignUp;
 
         public AuthorizationController(IMapper mapper,
             IUnitOfWork unitOfWork,
             ITokenService tokenService,
-            IValidator<UserSignInDTO> validatorUserSignIn,
-            IValidator<UserSignUpDTO> validatorUserSignUp)
+            IValidator<UserSignInDto> validatorUserSignIn,
+            IValidator<UserSignUpDto> validatorUserSignUp)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -32,7 +32,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("signin", Name = "Sign In")]
-        public async Task<IActionResult> PostAsync([FromBody] UserSignInDTO userSignIn)
+        public async Task<IActionResult> PostAsync([FromBody] UserSignInDto userSignIn)
         {
             var validationResult = await _validatorUserSignIn.ValidateAsync(userSignIn);
 
@@ -50,7 +50,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("signup", Name = "SignUp")]
-        public async Task<IActionResult> PostAsync([FromBody] UserSignUpDTO userSignUp)
+        public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp)
         {
             var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp);
 
