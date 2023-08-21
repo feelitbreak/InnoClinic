@@ -12,14 +12,14 @@ namespace InnoClinic.Infrastructure.Implementation
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ClinicDbContext _context;
+        private IUserRepository? _userRepository;
         private bool _disposed;
 
-        public IUserRepository Users { get; }
+        public IUserRepository Users => _userRepository ??= new UserRepository(_context);
 
-        public UnitOfWork(ClinicDbContext context, IUserRepository userRepository)
+        public UnitOfWork(ClinicDbContext context)
         {
             _context = context;
-            Users = userRepository;
         }
 
         public async Task<int> SaveChangesAsync()

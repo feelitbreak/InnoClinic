@@ -17,10 +17,8 @@ namespace InnoClinic.Infrastructure.Extensions
             options.UseSqlServer(configuration.GetConnectionString(connectionStringName)));
         }
 
-        public static void AddRepositories(this IServiceCollection services)
+        public static void AddUnitOfWork(this IServiceCollection services)
         {
-            services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
     }

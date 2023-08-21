@@ -14,7 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddSqlServerDb(builder.Configuration);
-builder.Services.AddRepositories();
+builder.Services.AddUnitOfWork();
 builder.Services.AddProjectServices();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddProjectOptions();
