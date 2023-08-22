@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using InnoClinic.Domain.Repositories;
+using InnoClinic.Domain.Interfaces;
 using InnoClinic.Domain.Entities;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using InnoClinic.Services.Abstractions;
+using AutoMapper;
+using InnoClinic.Domain.DTOs;
+using FluentValidation;
 
 namespace InnoClinic.Controllers
 {
@@ -12,57 +12,62 @@ namespace InnoClinic.Controllers
     [Route("[controller]")]
     public class AuthorizationController : ControllerBase
     {
-        private readonly IConfiguration _config;
-        private readonly IUserRepository _userRep;
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
+        private readonly IValidator<UserSignInDto> _validatorUserSignIn;
+        private readonly IValidator<UserSignUpDto> _validatorUserSignUp;
 
-        public AuthorizationController(IConfiguration config, IUserRepository userRep)
+        public AuthorizationController(IMapper mapper,
+            IUnitOfWork unitOfWork,
+            ITokenService tokenService,
+            IValidator<UserSignInDto> validatorUserSignIn,
+            IValidator<UserSignUpDto> validatorUserSignUp)
         {
-            _config = config;
-            _userRep = userRep;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _tokenService = tokenService;
+            _validatorUserSignIn = validatorUserSignIn;
+            _validatorUserSignUp = validatorUserSignUp;
         }
 
-        [HttpPost(Name = "SignUp")]
-        public IActionResult Post([FromBody] User userSignUp)
+        [HttpPost("signin", Name = "Sign In")]
+        public async Task<IActionResult> PostAsync([FromBody] UserSignInDto userSignIn)
         {
-            if (userSignUp is null)
+            var validationResult = await _validatorUserSignIn.ValidateAsync(userSignIn);
+
+            if (!validationResult.IsValid)
             {
-                return BadRequest();
+                return BadRequest(validationResult.Errors);
             }
 
-            if (!userSignUp.Password.Equals(userSignUp.ReenteredPassword))
-            {
-                return BadRequest("The passwords you’ve entered don’t coincide");
-            }
+            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email);
 
-            if (_userRep.CheckUser(userSignUp.Email))
-            {
-                return BadRequest("User with this email already exists");
-            }
+            var role = "User";
+            var token = _tokenService.GenerateToken(user!, role);
 
-            _userRep.AddUser(userSignUp);
-            var token = GenerateToken(userSignUp);
-
-            return Ok(token);
+            return Ok(new { token });
         }
 
-        private string GenerateToken(User user)
+        [HttpPost("signup", Name = "SignUp")]
+        public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp);
 
-            var claims = new[]
+            if (!validationResult.IsValid)
             {
-                new Claim(ClaimTypes.Email, user.Email)
-            };
+                return BadRequest(validationResult.Errors);
+            }
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(10),
-                signingCredentials: credentials);
+            var user = _mapper.Map<User>(userSignUp);
 
+            await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.SaveChangesAsync();
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var role = "User";
+            var token = _tokenService.GenerateToken(user, role);
+
+            return Ok(new { token });
         }
     }
 }
