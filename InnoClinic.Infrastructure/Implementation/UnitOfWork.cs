@@ -13,9 +13,12 @@ namespace InnoClinic.Infrastructure.Implementation
     {
         private readonly ClinicDbContext _context;
         private IUserRepository? _userRepository;
+        private IOfficeRepository? _officeRepository;
         private bool _disposed;
 
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);
+
+        public IOfficeRepository Offices => _officeRepository ??= new OfficeRepository(_context);
 
         public UnitOfWork(ClinicDbContext context)
         {
