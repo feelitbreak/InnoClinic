@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Domain.Extensions
 {
-    public static class Extensions
+    public static class DependencyInjection
     {
         private static readonly string jwtOptionsName = "Jwt";
 

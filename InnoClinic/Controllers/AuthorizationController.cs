@@ -5,6 +5,7 @@ using InnoClinic.Services.Abstractions;
 using AutoMapper;
 using InnoClinic.Domain.DTOs;
 using FluentValidation;
+using InnoClinic.Domain.Extensions;
 
 namespace InnoClinic.Controllers
 {
@@ -43,13 +44,22 @@ namespace InnoClinic.Controllers
 
             var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email);
 
+            if (user is null)
+            {
+                return BadRequest(new { errorMessage = "The email is incorrect" });
+            }
+            else if (!user.HasPassword(userSignIn.Password))
+            {
+                return BadRequest(new { errorMessage = "The password is incorrect" });
+            }
+
             var role = "User";
             var token = _tokenService.GenerateToken(user!, role);
 
             return Ok(new { token });
         }
 
-        [HttpPost("signup", Name = "SignUp")]
+        [HttpPost("signup", Name = "Sign Up")]
         public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp)
         {
             var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp);
