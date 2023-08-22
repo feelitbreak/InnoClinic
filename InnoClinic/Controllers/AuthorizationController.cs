@@ -10,7 +10,7 @@ using InnoClinic.Domain.Extensions;
 namespace InnoClinic.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("authorization")]
     public class AuthorizationController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -32,7 +32,7 @@ namespace InnoClinic.Controllers
             _validatorUserSignUp = validatorUserSignUp;
         }
 
-        [HttpPost("signin", Name = "Sign In")]
+        [HttpPost("sign-in", Name = "Sign In")]
         public async Task<IActionResult> PostAsync([FromBody] UserSignInDto userSignIn)
         {
             var validationResult = await _validatorUserSignIn.ValidateAsync(userSignIn);
@@ -59,7 +59,7 @@ namespace InnoClinic.Controllers
             return Ok(new { token });
         }
 
-        [HttpPost("signup", Name = "Sign Up")]
+        [HttpPost("sign-up", Name = "Sign Up")]
         public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp)
         {
             var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp);
