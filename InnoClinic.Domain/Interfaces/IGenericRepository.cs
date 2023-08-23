@@ -9,9 +9,9 @@ namespace InnoClinic.Domain.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<List<T>> GetAllAsync();
+        Task<List<T>> GetAsync();
 
-        Task<T?> GetByIdAsync(int id);
+        Task<T?> GetAsync(int id);
 
         Task AddAsync(T entity);
 

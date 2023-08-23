@@ -18,12 +18,12 @@ namespace InnoClinic.Infrastructure.Implementation
             _dbSet = context.Set<T>();
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public async Task<List<T>> GetAsync()
         {
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
