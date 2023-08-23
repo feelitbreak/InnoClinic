@@ -11,7 +11,7 @@ namespace InnoClinic.Controllers
 {
     [ApiController]
     [Route("office-management")]
-    //[Authorize(Roles = "Receptionist,Administrator")]
+    [Authorize(Roles = "Receptionist, Administrator")]
     public class OfficesController : ControllerBase
     {
         private readonly IMapper _mapper;

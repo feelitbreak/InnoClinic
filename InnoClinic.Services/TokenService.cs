@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Extensions.Configuration;
 using InnoClinic.Domain.Options;
 using Microsoft.Extensions.Options;
 
@@ -21,6 +20,7 @@ namespace InnoClinic.Services
 
         public string GenerateToken(User user, string role)
         {
+            var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
@@ -30,14 +30,17 @@ namespace InnoClinic.Services
                 new Claim(ClaimTypes.Role, role)
             };
 
-            var token = new JwtSecurityToken(_jwtOptions.Issuer,
-                _jwtOptions.Audience,
-                claims,
-                expires: DateTime.Now.AddMinutes(10),
-                signingCredentials: credentials);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _jwtOptions.Issuer,
+                Audience = _jwtOptions.Audience,
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddMinutes(10),
+                SigningCredentials = credentials,
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
 
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return tokenHandler.WriteToken(token);
         }
     }
 }
