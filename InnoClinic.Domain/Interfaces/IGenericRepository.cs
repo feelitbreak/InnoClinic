@@ -15,6 +15,8 @@ namespace InnoClinic.Domain.Interfaces
 
         Task AddAsync(T entity);
 
+        Task AddAsync(List<T> entities);
+
         void Update(T entity);
 
         void Remove(T entity);
