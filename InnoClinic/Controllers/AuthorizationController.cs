@@ -6,6 +6,7 @@ using AutoMapper;
 using InnoClinic.Domain.DTOs;
 using FluentValidation;
 using InnoClinic.Domain.Extensions;
+using System.Threading;
 
 namespace InnoClinic.Controllers
 {
@@ -33,16 +34,16 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("sign-in", Name = "Sign In")]
-        public async Task<IActionResult> PostAsync([FromBody] UserSignInDto userSignIn)
+        public async Task<IActionResult> PostAsync([FromBody] UserSignInDto userSignIn, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorUserSignIn.ValidateAsync(userSignIn);
+            var validationResult = await _validatorUserSignIn.ValidateAsync(userSignIn, cancellationToken);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
 
-            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email);
+            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken);
 
             if (user is null)
             {
@@ -60,9 +61,9 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("sign-up", Name = "Sign Up")]
-        public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp)
+        public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp);
+            var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -71,8 +72,8 @@ namespace InnoClinic.Controllers
 
             var user = _mapper.Map<User>(userSignUp);
 
-            await _unitOfWork.Users.AddAsync(user);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Users.AddAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             var role = "User";
             var token = _tokenService.GenerateToken(user, role);

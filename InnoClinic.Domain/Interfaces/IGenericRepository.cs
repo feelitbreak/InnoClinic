@@ -9,13 +9,13 @@ namespace InnoClinic.Domain.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<List<T>> GetAsync();
+        Task<List<T>> GetAsync(CancellationToken cancellationToken);
 
-        Task<T?> GetAsync(int id);
+        Task<T?> GetAsync(int id, CancellationToken cancellationToken);
 
-        Task AddAsync(T entity);
+        Task AddAsync(T entity, CancellationToken cancellationToken);
 
-        Task AddAsync(List<T> entities);
+        Task AddAsync(List<T> entities, CancellationToken cancellationToken);
 
         void Update(T entity);
 

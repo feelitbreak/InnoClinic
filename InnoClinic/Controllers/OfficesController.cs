@@ -26,9 +26,9 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("creation", Name = "Office Creation")]
-        public async Task<IActionResult> PostAsync([FromBody] OfficeDto officeInput)
+        public async Task<IActionResult> PostAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorOffice.ValidateAsync(officeInput);
+            var validationResult = await _validatorOffice.ValidateAsync(officeInput, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -37,8 +37,8 @@ namespace InnoClinic.Controllers
 
             var office = _mapper.Map<Office>(officeInput);
 
-            await _unitOfWork.Offices.AddAsync(office);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Offices.AddAsync(office, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Ok(new { office });
         }
