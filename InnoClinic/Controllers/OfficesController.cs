@@ -25,7 +25,7 @@ namespace InnoClinic.Controllers
             _validatorOffice = validatorOffice;
         }
 
-        [HttpPost("creation", Name = "Office Creation")]
+        [HttpPost("creation")]
         public async Task<IActionResult> PostAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {
             var validationResult = await _validatorOffice.ValidateAsync(officeInput, cancellationToken);

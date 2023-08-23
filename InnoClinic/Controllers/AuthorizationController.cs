@@ -33,7 +33,7 @@ namespace InnoClinic.Controllers
             _validatorUserSignUp = validatorUserSignUp;
         }
 
-        [HttpPost("sign-in", Name = "Sign In")]
+        [HttpPost("sign-in")]
         public async Task<IActionResult> PostAsync([FromBody] UserSignInDto userSignIn, CancellationToken cancellationToken)
         {
             var validationResult = await _validatorUserSignIn.ValidateAsync(userSignIn, cancellationToken);
@@ -60,7 +60,7 @@ namespace InnoClinic.Controllers
             return Ok(new { token });
         }
 
-        [HttpPost("sign-up", Name = "Sign Up")]
+        [HttpPost("sign-up")]
         public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp, CancellationToken cancellationToken)
         {
             var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp, cancellationToken);
