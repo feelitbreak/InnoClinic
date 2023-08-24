@@ -27,7 +27,7 @@ namespace InnoClinic.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, nameof(user.Role))
+                new Claim(ClaimTypes.Role, user.Role.ToString())
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
