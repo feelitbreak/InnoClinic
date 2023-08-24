@@ -20,7 +20,7 @@ namespace InnoClinic.Domain.DTOs
 
         public string OfficeNumber { get; set; }
 
-        public int RegistryPhoneNumber { get; set; }
+        public long RegistryPhoneNumber { get; set; }
 
         public Status Status { get; set; }
     }
