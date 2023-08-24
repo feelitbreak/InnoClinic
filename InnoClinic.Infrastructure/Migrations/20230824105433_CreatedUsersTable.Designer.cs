@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InnoClinic.Infrastructure.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    [Migration("20230824100743_CreatedUsersTable")]
+    [Migration("20230824105433_CreatedUsersTable")]
     partial class CreatedUsersTable
     {
         /// <inheritdoc />

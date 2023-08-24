@@ -46,8 +46,8 @@ namespace InnoClinic.Infrastructure.Migrations
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int>("RegistryPhoneNumber")
-                        .HasColumnType("int")
+                    b.Property<long>("RegistryPhoneNumber")
+                        .HasColumnType("bigint")
                         .HasColumnName("Registry phone number");
 
                     b.Property<int>("Status")

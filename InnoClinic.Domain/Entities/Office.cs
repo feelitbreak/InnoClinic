@@ -25,7 +25,7 @@ namespace InnoClinic.Domain.Entities
         public string OfficeNumber { get; set; }
 
         [Column("Registry phone number")]
-        public int RegistryPhoneNumber { get; set; }
+        public long RegistryPhoneNumber { get; set; }
 
         public Status Status { get; set; }
     }

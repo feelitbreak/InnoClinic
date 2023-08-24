@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InnoClinic.Infrastructure.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    [Migration("20230824100833_CreatedOfficesTable")]
+    [Migration("20230824105518_CreatedOfficesTable")]
     partial class CreatedOfficesTable
     {
         /// <inheritdoc />
@@ -49,8 +49,8 @@ namespace InnoClinic.Infrastructure.Migrations
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int>("RegistryPhoneNumber")
-                        .HasColumnType("int")
+                    b.Property<long>("RegistryPhoneNumber")
+                        .HasColumnType("bigint")
                         .HasColumnName("Registry phone number");
 
                     b.Property<int>("Status")

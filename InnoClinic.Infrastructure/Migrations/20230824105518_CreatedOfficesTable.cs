@@ -21,7 +21,7 @@ namespace InnoClinic.Infrastructure.Migrations
                     Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Housenumber = table.Column<string>(name: "House number", type: "nvarchar(max)", nullable: false),
                     Officenumber = table.Column<string>(name: "Office number", type: "nvarchar(max)", nullable: false),
-                    Registryphonenumber = table.Column<int>(name: "Registry phone number", type: "int", nullable: false),
+                    Registryphonenumber = table.Column<long>(name: "Registry phone number", type: "bigint", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
