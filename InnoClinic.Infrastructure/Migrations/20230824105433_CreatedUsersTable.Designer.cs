@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InnoClinic.Infrastructure.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    [Migration("20230821151708_CreatedUsersTable")]
+    [Migration("20230824105433_CreatedUsersTable")]
     partial class CreatedUsersTable
     {
         /// <inheritdoc />
@@ -40,6 +40,9 @@ namespace InnoClinic.Infrastructure.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

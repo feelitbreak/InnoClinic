@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using InnoClinic.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -18,19 +19,24 @@ namespace InnoClinic.Infrastructure.Implementation
             _dbSet = context.Set<T>();
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public async Task<List<T>> GetAsync(CancellationToken cancellationToken)
         {
-            return await _dbSet.ToListAsync();
+            return await _dbSet.ToListAsync(cancellationToken);
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetAsync(int id, CancellationToken cancellationToken)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
         }
 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(T entity, CancellationToken cancellationToken)
         {
-            await _dbSet.AddAsync(entity);
+            await _dbSet.AddAsync(entity, cancellationToken);
+        }
+
+        public async Task AddAsync(List<T> entities, CancellationToken cancellationToken)
+        {
+            await _dbSet.AddRangeAsync(entities, cancellationToken);
         }
 
         public void Update(T entity)

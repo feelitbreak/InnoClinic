@@ -10,6 +10,8 @@ namespace InnoClinic.Domain.Interfaces
     {
         IUserRepository Users { get; }
 
-        Task<int> SaveChangesAsync();
+        IOfficeRepository Offices { get; }
+
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

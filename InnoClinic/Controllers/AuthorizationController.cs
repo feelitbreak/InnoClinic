@@ -4,13 +4,15 @@ using InnoClinic.Domain.Entities;
 using InnoClinic.Services.Abstractions;
 using AutoMapper;
 using InnoClinic.Domain.DTOs;
+using InnoClinic.Domain.Enums;
 using FluentValidation;
 using InnoClinic.Domain.Extensions;
+using System.Threading;
 
 namespace InnoClinic.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("authorization")]
     public class AuthorizationController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -32,17 +34,17 @@ namespace InnoClinic.Controllers
             _validatorUserSignUp = validatorUserSignUp;
         }
 
-        [HttpPost("signin", Name = "Sign In")]
-        public async Task<IActionResult> PostAsync([FromBody] UserSignInDto userSignIn)
+        [HttpPost("sign-in")]
+        public async Task<IActionResult> PostAsync([FromBody] UserSignInDto userSignIn, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorUserSignIn.ValidateAsync(userSignIn);
+            var validationResult = await _validatorUserSignIn.ValidateAsync(userSignIn, cancellationToken);
 
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors);
             }
 
-            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email);
+            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken);
 
             if (user is null)
             {
@@ -53,16 +55,15 @@ namespace InnoClinic.Controllers
                 return BadRequest(new { errorMessage = "The password is incorrect" });
             }
 
-            var role = "User";
-            var token = _tokenService.GenerateToken(user!, role);
+            var token = _tokenService.GenerateToken(user!);
 
             return Ok(new { token });
         }
 
-        [HttpPost("signup", Name = "Sign Up")]
-        public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp)
+        [HttpPost("sign-up")]
+        public async Task<IActionResult> PostAsync([FromBody] UserSignUpDto userSignUp, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp);
+            var validationResult = await _validatorUserSignUp.ValidateAsync(userSignUp, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -70,14 +71,12 @@ namespace InnoClinic.Controllers
             }
 
             var user = _mapper.Map<User>(userSignUp);
+            user.Role = Role.User;
 
-            await _unitOfWork.Users.AddAsync(user);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.Users.AddAsync(user, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            var role = "User";
-            var token = _tokenService.GenerateToken(user, role);
-
-            return Ok(new { token });
+            return NoContent();
         }
     }
 }

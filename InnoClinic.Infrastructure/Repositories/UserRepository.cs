@@ -16,9 +16,9 @@ namespace InnoClinic.Infrastructure.Repositories
         {
         }
 
-        public async Task<User?> GetByEmailAsync(string email)
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            return await _dbSet.SingleOrDefaultAsync(u => u.Email.Equals(email));
+            return await _dbSet.SingleOrDefaultAsync(u => u.Email.Equals(email), cancellationToken);
         }
     }
 }

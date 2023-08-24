@@ -1,15 +1,13 @@
 ﻿using InnoClinic.Domain.Entities;
-using InnoClinic.Domain.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InnoClinic.Services.Abstractions
+namespace InnoClinic.Domain.Interfaces
 {
-    public interface ITokenService
+    public interface IOfficeRepository : IGenericRepository<Office>
     {
-        public string GenerateToken(User user);
     }
 }

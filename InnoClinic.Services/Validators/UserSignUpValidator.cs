@@ -36,9 +36,9 @@ namespace InnoClinic.Services.Validators
                 .WithMessage("The passwords you’ve entered don’t coincide");
         }
 
-        private async Task<bool> IsUniqueEmailAsync(string email, CancellationToken token)
+        private async Task<bool> IsUniqueEmailAsync(string email, CancellationToken cancellationToken)
         {
-            var userWithSameEmail = await _unitOfWork.Users.GetByEmailAsync(email);
+            var userWithSameEmail = await _unitOfWork.Users.GetByEmailAsync(email, cancellationToken);
 
             return userWithSameEmail is null;
         }
