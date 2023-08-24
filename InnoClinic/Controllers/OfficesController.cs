@@ -34,6 +34,20 @@ namespace InnoClinic.Controllers
             return Ok(new { offices });
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)
+        {
+            var office = await _unitOfWork.Offices.GetAsync(id, cancellationToken);
+
+            if (office is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { office });
+        }
+
         [HttpPost("creation")]
         public async Task<IActionResult> PostAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {
