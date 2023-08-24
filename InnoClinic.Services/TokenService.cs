@@ -18,7 +18,7 @@ namespace InnoClinic.Services
             _jwtOptions = jwtOptions.Value;
         }
 
-        public string GenerateToken(User user, string role)
+        public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
@@ -27,7 +27,7 @@ namespace InnoClinic.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, nameof(user.Role))
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor

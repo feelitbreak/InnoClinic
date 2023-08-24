@@ -4,6 +4,7 @@ using InnoClinic.Domain.Entities;
 using InnoClinic.Services.Abstractions;
 using AutoMapper;
 using InnoClinic.Domain.DTOs;
+using InnoClinic.Domain.Enums;
 using FluentValidation;
 using InnoClinic.Domain.Extensions;
 using System.Threading;
@@ -54,8 +55,8 @@ namespace InnoClinic.Controllers
                 return BadRequest(new { errorMessage = "The password is incorrect" });
             }
 
-            var role = "User";
-            var token = _tokenService.GenerateToken(user!, role);
+            user.Role = Role.User;
+            var token = _tokenService.GenerateToken(user!);
 
             return Ok(new { token });
         }
@@ -71,14 +72,12 @@ namespace InnoClinic.Controllers
             }
 
             var user = _mapper.Map<User>(userSignUp);
+            user.Role = Role.User;
 
             await _unitOfWork.Users.AddAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            var role = "User";
-            var token = _tokenService.GenerateToken(user, role);
-
-            return Ok(new { token });
+            return Ok(new { user });
         }
     }
 }
