@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using InnoClinic.Domain.DTOs;
+using InnoClinic.Domain.Enums;
 using InnoClinic.Domain.Entities;
 using InnoClinic.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace InnoClinic.Controllers
 {
     [ApiController]
     [Route("office-management")]
-    [Authorize(Roles = "Receptionist, Administrator")]
+    [Authorize(Roles = nameof(Role.Receptionist) + "," + nameof(Role.Administrator))]
     public class OfficesController : ControllerBase
     {
         private readonly IMapper _mapper;
