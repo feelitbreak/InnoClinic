@@ -26,6 +26,14 @@ namespace InnoClinic.Controllers
             _validatorOffice = validatorOffice;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+        {
+            var offices = await _unitOfWork.Offices.GetAsync(cancellationToken);
+
+            return Ok(new { offices });
+        }
+
         [HttpPost("creation")]
         public async Task<IActionResult> PostAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {
@@ -43,6 +51,5 @@ namespace InnoClinic.Controllers
 
             return Ok(new { office });
         }
-        
     }
 }
