@@ -76,7 +76,7 @@ namespace InnoClinic.Controllers
             await _unitOfWork.Users.AddAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Ok(new { user });
+            return NoContent();
         }
     }
 }
