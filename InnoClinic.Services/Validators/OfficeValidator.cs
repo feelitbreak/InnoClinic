@@ -27,10 +27,6 @@ namespace InnoClinic.Services.Validators
 
             RuleFor(u => u.RegistryPhoneNumber)
                 .NotNull();
-
-            RuleFor(u => u.Status)
-                .NotNull()
-                .IsInEnum();
         }
     }
 }

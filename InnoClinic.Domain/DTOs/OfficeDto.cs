@@ -22,6 +22,6 @@ namespace InnoClinic.Domain.DTOs
 
         public long RegistryPhoneNumber { get; set; }
 
-        public Status Status { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InnoClinic.Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InnoClinic.Domain.Entities
 {
-    public class Office
+    public class Office : BaseEntity
     {
-        public int Id { get; set; }
-
         public byte[]? Photo { get; set; }
 
         public string City { get; set; }
@@ -26,7 +18,5 @@ namespace InnoClinic.Domain.Entities
 
         [Column("Registry phone number")]
         public long RegistryPhoneNumber { get; set; }
-
-        public Status Status { get; set; }
     }
 }
