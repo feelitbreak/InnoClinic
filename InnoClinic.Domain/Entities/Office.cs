@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace InnoClinic.Domain.Entities
 {
@@ -18,5 +19,8 @@ namespace InnoClinic.Domain.Entities
 
         [Column("Registry phone number")]
         public long RegistryPhoneNumber { get; set; }
+
+        [JsonIgnore]
+        public List<User> UserList { get; } = new();
     }
 }

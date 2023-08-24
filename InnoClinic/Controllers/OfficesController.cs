@@ -7,6 +7,7 @@ using InnoClinic.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
+using System.Security.Claims;
 
 namespace InnoClinic.Controllers
 {
@@ -59,6 +60,10 @@ namespace InnoClinic.Controllers
             }
 
             var office = _mapper.Map<Office>(officeInput);
+
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var user = await _unitOfWork.Users.GetAsync(int.Parse(userId), cancellationToken);
+            office.UserList.Add(user!);
 
             await _unitOfWork.Offices.AddAsync(office, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

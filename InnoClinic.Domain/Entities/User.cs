@@ -1,5 +1,6 @@
 ﻿using InnoClinic.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace InnoClinic.Domain.Entities
 {
@@ -11,5 +12,8 @@ namespace InnoClinic.Domain.Entities
         public string Password { get; set; }
 
         public Role Role { get; set; }
+
+        [JsonIgnore]
+        public List<Office> OfficeList { get; } = new();
     }
 }

@@ -4,6 +4,7 @@ using InnoClinic.Infrastructure.Implementation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InnoClinic.Infrastructure.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    partial class ClinicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230824151852_CreatedOfficesTable")]
+    partial class CreatedOfficesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,36 +98,6 @@ namespace InnoClinic.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("OfficeUser", b =>
-                {
-                    b.Property<int>("OfficeListId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserListId")
-                        .HasColumnType("int");
-
-                    b.HasKey("OfficeListId", "UserListId");
-
-                    b.HasIndex("UserListId");
-
-                    b.ToTable("OfficeUser");
-                });
-
-            modelBuilder.Entity("OfficeUser", b =>
-                {
-                    b.HasOne("InnoClinic.Domain.Entities.Office", null)
-                        .WithMany()
-                        .HasForeignKey("OfficeListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InnoClinic.Domain.Entities.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

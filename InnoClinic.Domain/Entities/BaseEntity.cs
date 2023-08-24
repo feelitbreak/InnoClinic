@@ -1,4 +1,6 @@
-﻿namespace InnoClinic.Domain.Entities
+﻿using System.ComponentModel;
+
+namespace InnoClinic.Domain.Entities
 {
     public abstract class BaseEntity
     {
@@ -6,6 +8,6 @@
 
         public bool IsActive { get; set; } = true;
 
-        private DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
