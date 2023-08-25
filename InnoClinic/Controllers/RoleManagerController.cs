@@ -11,14 +11,12 @@ namespace InnoClinic.Controllers
     [ApiController]
     [Route("role-manager")]
     [Authorize(Roles = nameof(Role.Administrator))]
-    public class RoleManagerController : ControllerBase
+    public class RoleManagerController : BaseController
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<UserRoleDto> _validatorUserRole;
 
-        public RoleManagerController(IUnitOfWork unitOfWork, IValidator<UserRoleDto> validatorUserRole)
+        public RoleManagerController(IUnitOfWork unitOfWork, IValidator<UserRoleDto> validatorUserRole) : base(unitOfWork)
         {
-            _unitOfWork = unitOfWork;
             _validatorUserRole = validatorUserRole;
         }
 

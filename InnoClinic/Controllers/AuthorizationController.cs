@@ -13,10 +13,9 @@ namespace InnoClinic.Controllers
 {
     [ApiController]
     [Route("authorization")]
-    public class AuthorizationController : ControllerBase
+    public class AuthorizationController : BaseController
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
         private readonly IValidator<UserSignInDto> _validatorUserSignIn;
         private readonly IValidator<UserSignUpDto> _validatorUserSignUp;
@@ -25,10 +24,9 @@ namespace InnoClinic.Controllers
             IUnitOfWork unitOfWork,
             ITokenService tokenService,
             IValidator<UserSignInDto> validatorUserSignIn,
-            IValidator<UserSignUpDto> validatorUserSignUp)
+            IValidator<UserSignUpDto> validatorUserSignUp) : base(unitOfWork)
         {
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
             _tokenService = tokenService;
             _validatorUserSignIn = validatorUserSignIn;
             _validatorUserSignUp = validatorUserSignUp;

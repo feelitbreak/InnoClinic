@@ -14,16 +14,14 @@ namespace InnoClinic.Controllers
     [ApiController]
     [Route("office-management")]
     [Authorize(Roles = nameof(Role.Receptionist) + "," + nameof(Role.Administrator))]
-    public class OfficesController : ControllerBase
+    public class OfficesController : BaseController
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<OfficeDto> _validatorOffice;
 
-        public OfficesController(IMapper mapper, IUnitOfWork unitOfWork, IValidator<OfficeDto> validatorOffice)
+        public OfficesController(IMapper mapper, IUnitOfWork unitOfWork, IValidator<OfficeDto> validatorOffice) : base(unitOfWork)
         {
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
             _validatorOffice = validatorOffice;
         }
 
@@ -61,9 +59,13 @@ namespace InnoClinic.Controllers
 
             var office = _mapper.Map<Office>(officeInput);
 
-            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
-            var user = await _unitOfWork.Users.GetAsync(int.Parse(userId), cancellationToken);
-            office.UserList.Add(user!);
+            var user = await GetUserFromContextAsync(cancellationToken);
+            if (user is null)
+            {
+                return BadRequest(new { errorMessage = "Couldn't find current user" });
+            }
+
+            office.UserList.Add(user);
 
             await _unitOfWork.Offices.AddAsync(office, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
