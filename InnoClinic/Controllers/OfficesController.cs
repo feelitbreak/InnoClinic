@@ -17,11 +17,13 @@ namespace InnoClinic.Controllers
     public class OfficesController : BaseController
     {
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<OfficeDto> _validatorOffice;
 
-        public OfficesController(IMapper mapper, IUnitOfWork unitOfWork, IValidator<OfficeDto> validatorOffice) : base(unitOfWork)
+        public OfficesController(IMapper mapper, IUnitOfWork unitOfWork, IValidator<OfficeDto> validatorOffice)
         {
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
             _validatorOffice = validatorOffice;
         }
 
@@ -59,7 +61,13 @@ namespace InnoClinic.Controllers
 
             var office = _mapper.Map<Office>(officeInput);
 
-            var user = await GetUserFromContextAsync(cancellationToken);
+            var userId = GetUserIdFromContext();
+            if (userId is null)
+            {
+                return BadRequest(new { errorMessage = "Couldn't find current user" });
+            }
+
+            var user = await _unitOfWork.Users.GetAsync(userId.Value, cancellationToken);
             if (user is null)
             {
                 return BadRequest(new { errorMessage = "Couldn't find current user" });

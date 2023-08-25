@@ -7,26 +7,18 @@ namespace InnoClinic.Controllers
 {
     public abstract class BaseController : ControllerBase
     {
-        protected readonly IUnitOfWork _unitOfWork;
-
-        protected BaseController(IUnitOfWork unitOfWork)
+        protected int? GetUserIdFromContext()
         {
-            _unitOfWork = unitOfWork;
-        }
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        protected async Task<User?> GetUserFromContextAsync(CancellationToken cancellationToken)
-        {
-            var idClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-
-            if (idClaim is null)
+            if (int.TryParse(userId, out var id))
+            {
+                return id;
+            }
+            else
             {
                 return null;
             }
-
-            var userId = int.Parse(idClaim.Value);
-            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken);
-
-            return user;
         }
     }
 }
