@@ -80,5 +80,29 @@ namespace InnoClinic.Controllers
 
             return Ok(new { office });
         }
+
+        [HttpPatch]
+        [Route("{id:int}/status")]
+        public async Task<IActionResult> PatchAsync(int id, [FromQuery] bool IsActive, CancellationToken cancellationToken)
+        {
+            var office = await _unitOfWork.Offices.GetAsync(id, cancellationToken);
+
+            if (office is null)
+            {
+                return NotFound();
+            }
+
+            office.IsActive = IsActive;
+
+            if (!IsActive)
+            {
+                office.UserList.ForEach(u => u.IsActive = false);
+            }
+
+            _unitOfWork.Offices.Update(office);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return Ok(new { office });
+        }
     }
 }
