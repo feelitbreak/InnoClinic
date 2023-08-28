@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InnoClinic.Domain.Interfaces;
+﻿using InnoClinic.Domain.Interfaces;
 using InnoClinic.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace InnoClinic.Infrastructure.Implementation
 {

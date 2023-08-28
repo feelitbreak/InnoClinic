@@ -64,7 +64,7 @@ namespace InnoClinic.Controllers
                 return BadRequest(new { errorMessage = "The password is incorrect" });
             }
 
-            var token = _tokenService.GenerateToken(user!);
+            var token = _tokenService.GenerateToken(user);
 
             return Ok(new { token });
         }

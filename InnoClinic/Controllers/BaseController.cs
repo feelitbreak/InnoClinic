@@ -1,6 +1,4 @@
-﻿using InnoClinic.Domain.Entities;
-using InnoClinic.Domain.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace InnoClinic.Controllers

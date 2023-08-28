@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace InnoClinic.Domain.Entities
+﻿namespace InnoClinic.Domain.Entities
 {
     public abstract class BaseEntity
     {

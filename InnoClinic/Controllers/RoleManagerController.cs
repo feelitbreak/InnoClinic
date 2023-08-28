@@ -4,7 +4,6 @@ using InnoClinic.Domain.Enums;
 using InnoClinic.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace InnoClinic.Controllers
 {
