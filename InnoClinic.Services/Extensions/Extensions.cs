@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using InnoClinic.Services.Validators;
+using InnoClinic.Services.Implementation;
 
 namespace InnoClinic.Services.Extensions
 {

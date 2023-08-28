@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using InnoClinic.Domain.Options;
 using Microsoft.Extensions.Options;
 
-namespace InnoClinic.Services
+namespace InnoClinic.Services.Implementation
 {
     public class TokenService : ITokenService
     {

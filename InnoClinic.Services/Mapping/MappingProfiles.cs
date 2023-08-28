@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using InnoClinic.Domain.Entities;
 using InnoClinic.Domain.DTOs;
 
-namespace InnoClinic.Services
+namespace InnoClinic.Services.Mapping
 {
     public class MappingProfiles : Profile
     {
