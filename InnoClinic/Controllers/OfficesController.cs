@@ -47,6 +47,42 @@ namespace InnoClinic.Controllers
             return Ok(new { office });
         }
 
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<IActionResult> PutAsync(int id, [FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
+        {
+            var userId = GetUserIdFromContext();
+            if (userId is null)
+            {
+                return BadRequest(new { errorMessage = "Couldn't find current user" });
+            }
+
+            var user = await _unitOfWork.Users.GetAsync(userId.Value, cancellationToken);
+            if (user is null)
+            {
+                return BadRequest(new { errorMessage = "Couldn't find current user" });
+            }
+
+            if (user.OfficeId != id)
+            {
+                return BadRequest(new { errorMessage = "You can only edit your own office" });
+            }
+
+            var office = user.Office;
+            if (office is null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(officeInput, office);
+            office.UserList.ForEach(u => u.IsActive = office.IsActive);
+
+            _unitOfWork.Offices.Update(office);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return Ok(new { office });
+        }
+
         [HttpPost("creation")]
         public async Task<IActionResult> PostAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {
