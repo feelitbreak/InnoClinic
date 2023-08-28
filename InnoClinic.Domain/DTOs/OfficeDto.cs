@@ -1,12 +1,4 @@
-﻿using InnoClinic.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace InnoClinic.Domain.DTOs
+﻿namespace InnoClinic.Domain.DTOs
 {
     public class OfficeDto
     {
@@ -22,6 +14,6 @@ namespace InnoClinic.Domain.DTOs
 
         public long RegistryPhoneNumber { get; set; }
 
-        public Status Status { get; set; }
+        public bool IsActive { get; set; }
     }
 }

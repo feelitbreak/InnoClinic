@@ -4,6 +4,7 @@ using InnoClinic.Infrastructure.Implementation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,16 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InnoClinic.Infrastructure.Migrations
 {
     [DbContext(typeof(ClinicDbContext))]
-    partial class ClinicDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230824151852_CreatedOfficesTable")]
+    partial class CreatedOfficesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.10")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -85,43 +85,19 @@ namespace InnoClinic.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("E-mail");
 
-                    b.Property<byte[]>("HashedPassword")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)")
-                        .HasColumnName("Hashed password");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("OfficeId")
-                        .HasColumnType("int");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Salt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("OfficeId");
-
                     b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("InnoClinic.Domain.Entities.User", b =>
-                {
-                    b.HasOne("InnoClinic.Domain.Entities.Office", "Office")
-                        .WithMany("UserList")
-                        .HasForeignKey("OfficeId");
-
-                    b.Navigation("Office");
-                });
-
-            modelBuilder.Entity("InnoClinic.Domain.Entities.Office", b =>
-                {
-                    b.Navigation("UserList");
                 });
 #pragma warning restore 612, 618
         }

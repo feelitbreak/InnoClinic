@@ -1,19 +1,24 @@
 ﻿using InnoClinic.Domain.Enums;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace InnoClinic.Domain.Entities
 {
-    public class User
+    public class User: BaseEntity
     {
-        public int Id { get; set; }
-
         [Column("E-mail")]
         public string Email { get; set; }
 
-        public string Password { get; set; }
+        [Column("Hashed password")]
+        public byte[] HashedPassword { get; set; }
+
+        public byte[] Salt { get; set; }
 
         public Role Role { get; set; }
+
+        public int? OfficeId { get; set; }
+
+        [JsonIgnore]
+        public virtual Office? Office { get; set; }
     }
 }

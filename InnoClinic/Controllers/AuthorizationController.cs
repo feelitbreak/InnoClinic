@@ -4,31 +4,33 @@ using InnoClinic.Domain.Entities;
 using InnoClinic.Services.Abstractions;
 using AutoMapper;
 using InnoClinic.Domain.DTOs;
+using InnoClinic.Domain.Models;
 using InnoClinic.Domain.Enums;
 using FluentValidation;
-using InnoClinic.Domain.Extensions;
-using System.Threading;
 
 namespace InnoClinic.Controllers
 {
     [ApiController]
     [Route("authorization")]
-    public class AuthorizationController : ControllerBase
+    public class AuthorizationController : BaseController
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPasswordHashingService _hashingService;
         private readonly ITokenService _tokenService;
         private readonly IValidator<UserSignInDto> _validatorUserSignIn;
         private readonly IValidator<UserSignUpDto> _validatorUserSignUp;
 
         public AuthorizationController(IMapper mapper,
             IUnitOfWork unitOfWork,
+            IPasswordHashingService hashingService,
             ITokenService tokenService,
             IValidator<UserSignInDto> validatorUserSignIn,
             IValidator<UserSignUpDto> validatorUserSignUp)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _hashingService = hashingService;
             _tokenService = tokenService;
             _validatorUserSignIn = validatorUserSignIn;
             _validatorUserSignUp = validatorUserSignUp;
@@ -50,12 +52,19 @@ namespace InnoClinic.Controllers
             {
                 return BadRequest(new { errorMessage = "The email is incorrect" });
             }
-            else if (!user.HasPassword(userSignIn.Password))
+
+            var passwordModel = new PasswordModel
+            {
+                Key = user.HashedPassword,
+                Salt = user.Salt
+            };
+
+            if (!_hashingService.IsValidPassword(userSignIn.Password, passwordModel))
             {
                 return BadRequest(new { errorMessage = "The password is incorrect" });
             }
 
-            var token = _tokenService.GenerateToken(user!);
+            var token = _tokenService.GenerateToken(user);
 
             return Ok(new { token });
         }
@@ -71,6 +80,9 @@ namespace InnoClinic.Controllers
             }
 
             var user = _mapper.Map<User>(userSignUp);
+            var passwordModel = _hashingService.EncodePassword(userSignUp.Password);
+            user.HashedPassword = passwordModel.Key;
+            user.Salt = passwordModel.Salt;
             user.Role = Role.User;
 
             await _unitOfWork.Users.AddAsync(user, cancellationToken);

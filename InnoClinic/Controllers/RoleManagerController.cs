@@ -4,14 +4,13 @@ using InnoClinic.Domain.Enums;
 using InnoClinic.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace InnoClinic.Controllers
 {
     [ApiController]
     [Route("role-manager")]
     [Authorize(Roles = nameof(Role.Administrator))]
-    public class RoleManagerController : ControllerBase
+    public class RoleManagerController : BaseController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<UserRoleDto> _validatorUserRole;

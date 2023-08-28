@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -22,7 +23,8 @@ namespace InnoClinic.Infrastructure.Migrations
                     Housenumber = table.Column<string>(name: "House number", type: "nvarchar(max)", nullable: false),
                     Officenumber = table.Column<string>(name: "Office number", type: "nvarchar(max)", nullable: false),
                     Registryphonenumber = table.Column<long>(name: "Registry phone number", type: "bigint", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

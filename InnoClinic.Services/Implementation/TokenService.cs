@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using InnoClinic.Domain.Options;
 using Microsoft.Extensions.Options;
 
-namespace InnoClinic.Services
+namespace InnoClinic.Services.Implementation
 {
     public class TokenService : ITokenService
     {
@@ -26,6 +26,7 @@ namespace InnoClinic.Services
 
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
