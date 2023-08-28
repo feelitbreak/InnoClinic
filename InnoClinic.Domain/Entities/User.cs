@@ -16,7 +16,9 @@ namespace InnoClinic.Domain.Entities
 
         public Role Role { get; set; }
 
+        public int? OfficeId { get; set; }
+
         [JsonIgnore]
-        public virtual List<Office> OfficeList { get; } = new();
+        public virtual Office? Office { get; set; }
     }
 }

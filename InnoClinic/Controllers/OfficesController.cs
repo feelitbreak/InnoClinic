@@ -13,7 +13,7 @@ namespace InnoClinic.Controllers
 {
     [ApiController]
     [Route("office-management")]
-    [Authorize(Roles = nameof(Role.Receptionist) + "," + nameof(Role.Administrator))]
+    [Authorize(Roles = nameof(Role.Receptionist))]
     public class OfficesController : BaseController
     {
         private readonly IMapper _mapper;
@@ -73,6 +73,11 @@ namespace InnoClinic.Controllers
                 return BadRequest(new { errorMessage = "Couldn't find current user" });
             }
 
+            if (user.Office is not null)
+            {
+                return BadRequest(new { errorMessage = "You are already tied to an office" });
+            }
+
             office.UserList.Add(user);
 
             await _unitOfWork.Offices.AddAsync(office, cancellationToken);
@@ -83,21 +88,33 @@ namespace InnoClinic.Controllers
 
         [HttpPatch]
         [Route("{id:int}/status")]
-        public async Task<IActionResult> PatchAsync(int id, [FromQuery] bool IsActive, CancellationToken cancellationToken)
+        public async Task<IActionResult> PatchAsync(int id, CancellationToken cancellationToken)
         {
-            var office = await _unitOfWork.Offices.GetAsync(id, cancellationToken);
+            var userId = GetUserIdFromContext();
+            if (userId is null)
+            {
+                return BadRequest(new { errorMessage = "Couldn't find current user" });
+            }
 
+            var user = await _unitOfWork.Users.GetAsync(userId.Value, cancellationToken);
+            if (user is null)
+            {
+                return BadRequest(new { errorMessage = "Couldn't find current user" });
+            }
+
+            if (user.OfficeId != id)
+            {
+                return BadRequest(new { errorMessage = "You can only edit your own office" });
+            }
+
+            var office = user.Office;
             if (office is null)
             {
                 return NotFound();
             }
 
-            office.IsActive = IsActive;
-
-            if (!IsActive)
-            {
-                office.UserList.ForEach(u => u.IsActive = false);
-            }
+            office.IsActive = !office.IsActive;
+            office.UserList.ForEach(u => u.IsActive = office.IsActive);
 
             _unitOfWork.Offices.Update(office);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
