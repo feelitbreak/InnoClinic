@@ -14,7 +14,9 @@ namespace InnoClinic.Infrastructure.Extensions
         public static void AddSqlServerDb(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ClinicDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString(connectionStringName)));
+            options
+            .UseLazyLoadingProxies()
+            .UseSqlServer(configuration.GetConnectionString(connectionStringName)));
         }
 
         public static void AddUnitOfWork(this IServiceCollection services)
