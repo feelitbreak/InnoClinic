@@ -16,14 +16,14 @@ namespace InnoClinic.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHashingService _hashingService;
+        private readonly IPasswordHashingService _hashingService;
         private readonly ITokenService _tokenService;
         private readonly IValidator<UserSignInDto> _validatorUserSignIn;
         private readonly IValidator<UserSignUpDto> _validatorUserSignUp;
 
         public AuthorizationController(IMapper mapper,
             IUnitOfWork unitOfWork,
-            IHashingService hashingService,
+            IPasswordHashingService hashingService,
             ITokenService tokenService,
             IValidator<UserSignInDto> validatorUserSignIn,
             IValidator<UserSignUpDto> validatorUserSignUp)

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Services.Implementation
 {
-    public class HashingService : IHashingService
+    public class PasswordHashingService : IPasswordHashingService
     {
         private readonly int saltSize = 32;
 

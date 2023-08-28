@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Services.Abstractions
 {
-    public interface IHashingService
+    public interface IPasswordHashingService
     {
         PasswordModel EncodePassword(string password);
 
