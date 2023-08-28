@@ -9,7 +9,10 @@ namespace InnoClinic.Domain.Entities
         [Column("E-mail")]
         public string Email { get; set; }
 
-        public string Password { get; set; }
+        [Column("Hashed password")]
+        public byte[] HashedPassword { get; set; }
+
+        public byte[] Salt { get; set; }
 
         public Role Role { get; set; }
 
