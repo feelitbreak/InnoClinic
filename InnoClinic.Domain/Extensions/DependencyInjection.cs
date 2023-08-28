@@ -16,6 +16,7 @@ namespace InnoClinic.Domain.Extensions
         public static void AddProjectOptions(this IServiceCollection services)
         {
             services.AddOptions<JwtOptions>().BindConfiguration(jwtOptionsName);
+            services.AddOptions<AesCipherKeyOptions>().BindConfiguration(nameof(AesCipherKeyOptions));
         }
     }
 }
