@@ -9,8 +9,8 @@ namespace InnoClinic.Services.Abstractions
 {
     public interface IHashingService
     {
-        PasswordModel Encode(string password);
+        PasswordModel EncodePassword(string password);
 
-        bool IsValid(string password, PasswordModel hashedPassword);
+        bool IsValidPassword(string password, PasswordModel hashedPassword);
     }
 }

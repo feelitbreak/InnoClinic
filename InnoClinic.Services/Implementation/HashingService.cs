@@ -15,7 +15,7 @@ namespace InnoClinic.Services.Implementation
     {
         private readonly int saltSize = 32;
 
-        public PasswordModel Encode(string password)
+        public PasswordModel EncodePassword(string password)
         {
             var passwordModel = new PasswordModel();
 
@@ -28,7 +28,7 @@ namespace InnoClinic.Services.Implementation
             return passwordModel;
         }
 
-        public bool IsValid(string password, PasswordModel hashedPassword)
+        public bool IsValidPassword(string password, PasswordModel hashedPassword)
         {
             using var deriveBytes = new Rfc2898DeriveBytes(password, hashedPassword.Salt);
             byte[] newKey = deriveBytes.GetBytes(saltSize);
