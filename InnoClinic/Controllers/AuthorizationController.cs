@@ -7,6 +7,7 @@ using InnoClinic.Domain.DTOs;
 using InnoClinic.Domain.Models;
 using InnoClinic.Domain.Enums;
 using FluentValidation;
+using InnoClinic.Domain.Exceptions;
 
 namespace InnoClinic.Controllers
 {
@@ -46,12 +47,8 @@ namespace InnoClinic.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken);
-
-            if (user is null)
-            {
-                return BadRequest(new { errorMessage = "The email is incorrect" });
-            }
+            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken)
+                       ?? throw new UserEmailNotFoundException(userSignIn.Email);
 
             var passwordModel = new PasswordModel
             {
@@ -61,7 +58,7 @@ namespace InnoClinic.Controllers
 
             if (!_hashingService.IsValidPassword(userSignIn.Password, passwordModel))
             {
-                return BadRequest(new { errorMessage = "The password is incorrect" });
+                throw new InvalidPasswordException();
             }
 
             var token = _tokenService.GenerateToken(user);
