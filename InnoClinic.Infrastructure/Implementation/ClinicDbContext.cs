@@ -15,8 +15,7 @@ namespace InnoClinic.Infrastructure.Implementation
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().ToTable("Users");
-            modelBuilder.Entity<Office>().ToTable("Offices");
+            
         }
     }
 }

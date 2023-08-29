@@ -35,17 +35,17 @@ namespace InnoClinic.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}")]
-        public async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)
+        [Route("{officeId:int}")]
+        public async Task<IActionResult> GetAsync(int officeId, CancellationToken cancellationToken)
         {
-            var office = await _unitOfWork.Offices.GetAsync(id, cancellationToken);
+            var office = await _unitOfWork.Offices.GetAsync(officeId, cancellationToken);
 
-            return office is null ? throw new OfficeNotFoundException(id) : Ok(new { office });
+            return office is null ? throw new OfficeNotFoundException(officeId) : Ok(new { office });
         }
 
         [HttpPut]
-        [Route("{id:int}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] OfficeDto officeInput,
+        [Route("{officeId:int}")]
+        public async Task<IActionResult> PutAsync(int officeId, [FromBody] OfficeDto officeInput,
             CancellationToken cancellationToken)
         {
             var userId = GetUserIdFromContext();
@@ -53,15 +53,15 @@ namespace InnoClinic.Controllers
             var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
                        throw new UserNotFoundException(userId);
 
-            if (user.OfficeId != id)
+            if (user.OfficeId != officeId)
             {
-                throw new UserDoesNotBelongToOfficeException(userId, id);
+                throw new UserDoesNotBelongToOfficeException(userId, officeId);
             }
 
-            var office = user.Office ?? throw new OfficeNotFoundException(id);
+            var office = user.Office ?? throw new OfficeNotFoundException(officeId);
 
             _mapper.Map(officeInput, office);
-            office.UserList.ForEach(u => u.IsActive = office.IsActive);
+            office.Users.ForEach(u => u.IsActive = office.IsActive);
 
             _unitOfWork.Offices.Update(office);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -70,23 +70,23 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPatch]
-        [Route("{id:int}/status")]
-        public async Task<IActionResult> PatchAsync(int id, CancellationToken cancellationToken)
+        [Route("{officeId:int}/status")]
+        public async Task<IActionResult> PatchAsync(int officeId, CancellationToken cancellationToken)
         {
             var userId = GetUserIdFromContext();
 
             var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
                        throw new UserNotFoundException(userId);
 
-            if (user.OfficeId != id)
+            if (user.OfficeId != officeId)
             {
-                throw new UserDoesNotBelongToOfficeException(userId, id);
+                throw new UserDoesNotBelongToOfficeException(userId, officeId);
             }
 
-            var office = user.Office ?? throw new OfficeNotFoundException(id);
+            var office = user.Office ?? throw new OfficeNotFoundException(officeId);
 
             office.IsActive = !office.IsActive;
-            office.UserList.ForEach(u => u.IsActive = office.IsActive);
+            office.Users.ForEach(u => u.IsActive = office.IsActive);
 
             _unitOfWork.Offices.Update(office);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -116,7 +116,7 @@ namespace InnoClinic.Controllers
                 throw new UserAlreadyBelongsToOfficeException(userId, user.OfficeId.Value);
             }
 
-            office.UserList.Add(user);
+            office.Users.Add(user);
 
             await _unitOfWork.Offices.AddAsync(office, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
