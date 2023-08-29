@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using InnoClinic.Middleware;
 using Microsoft.OpenApi.Models;
 
 namespace InnoClinic.Extensions
@@ -54,6 +55,11 @@ namespace InnoClinic.Extensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                 };
             });
+        }
+
+        public static void AddMiddleware(this IServiceCollection services)
+        {
+            services.AddTransient<ExceptionHandlingMiddleware>();
         }
     }
 }

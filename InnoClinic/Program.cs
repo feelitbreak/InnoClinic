@@ -2,6 +2,7 @@ using InnoClinic.Extensions;
 using InnoClinic.Domain.Extensions;
 using InnoClinic.Services.Extensions;
 using InnoClinic.Infrastructure.Extensions;
+using InnoClinic.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddUnitOfWork();
 builder.Services.AddProjectServices();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddProjectOptions();
+builder.Services.AddMiddleware();
 
 var app = builder.Build();
 
@@ -34,6 +36,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
