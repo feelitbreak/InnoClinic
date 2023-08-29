@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using InnoClinic.Domain.DTOs;
 using InnoClinic.Domain.Enums;
+using InnoClinic.Domain.Exceptions;
 using InnoClinic.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,12 +32,8 @@ namespace InnoClinic.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var user = await _unitOfWork.Users.GetByEmailAsync(userRole.UserEmail, cancellationToken);
-
-            if (user is null)
-            {
-                return BadRequest(new { errorMessage = "User not found" });
-            }
+            var user = await _unitOfWork.Users.GetByEmailAsync(userRole.UserEmail, cancellationToken) ??
+                       throw new UserEmailNotFoundException(userRole.UserEmail);
 
             user.Role = userRole.Role;
             _unitOfWork.Users.Update(user);

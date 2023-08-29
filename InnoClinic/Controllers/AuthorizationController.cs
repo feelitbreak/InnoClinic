@@ -47,8 +47,8 @@ namespace InnoClinic.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken)
-                       ?? throw new UserEmailNotFoundException(userSignIn.Email);
+            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken) ??
+                       throw new UserEmailNotFoundException(userSignIn.Email);
 
             var passwordModel = new PasswordModel
             {
