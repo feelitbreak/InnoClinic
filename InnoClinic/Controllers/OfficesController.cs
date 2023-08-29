@@ -50,15 +50,8 @@ namespace InnoClinic.Controllers
         {
             var userId = GetUserIdFromContext();
 
-            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
-                       throw new NotFoundException("The user was not found.");
-
-            if (user.OfficeId != officeId)
-            {
-                throw new BadRequestException("You can only edit your own office.");
-            }
-
-            var office = user.Office ?? throw new NotFoundException("The office was not found.");
+            var office = await _unitOfWork.Users.GetOfficeAsync(userId, officeId, cancellationToken) ??
+                         throw new NotFoundException("The office was not found.");
 
             _mapper.Map(officeInput, office);
             office.Users.ForEach(u => u.IsActive = office.IsActive);
@@ -75,15 +68,8 @@ namespace InnoClinic.Controllers
         {
             var userId = GetUserIdFromContext();
 
-            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
-                       throw new NotFoundException("The user was not found.");
-
-            if (user.OfficeId != officeId)
-            {
-                throw new BadRequestException("You can only edit your own office.");
-            }
-
-            var office = user.Office ?? throw new NotFoundException("The office was not found.");
+            var office = await _unitOfWork.Users.GetOfficeAsync(userId, officeId, cancellationToken) ??
+                         throw new NotFoundException("The office was not found.");
 
             office.IsActive = !office.IsActive;
             office.Users.ForEach(u => u.IsActive = office.IsActive);

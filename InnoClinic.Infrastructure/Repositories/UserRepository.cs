@@ -9,11 +9,21 @@ namespace InnoClinic.Infrastructure.Repositories
     {
         public UserRepository(DbContext context) : base(context)
         {
+
         }
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
             return await DbSet.SingleOrDefaultAsync(u => u.Email.Equals(email), cancellationToken);
+        }
+
+        public async Task<Office?> GetOfficeAsync(int userId, int officeId, CancellationToken cancellationToken)
+        {
+            return await DbSet
+                .Where(u => u.Id == userId && u.OfficeId == officeId)
+                .Include(u => u.Office)
+                .Select(u => u.Office)
+                .SingleOrDefaultAsync(cancellationToken);
         }
     }
 }
