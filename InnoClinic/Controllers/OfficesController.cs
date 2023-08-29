@@ -3,6 +3,7 @@ using FluentValidation;
 using InnoClinic.Domain.DTOs;
 using InnoClinic.Domain.Enums;
 using InnoClinic.Domain.Entities;
+using InnoClinic.Domain.Exceptions;
 using InnoClinic.Domain.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,42 +40,52 @@ namespace InnoClinic.Controllers
         {
             var office = await _unitOfWork.Offices.GetAsync(id, cancellationToken);
 
-            if (office is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(new { office });
+            return office is null ? throw new OfficeNotFoundException(id) : Ok(new { office });
         }
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
+        public async Task<IActionResult> PutAsync(int id, [FromBody] OfficeDto officeInput,
+            CancellationToken cancellationToken)
         {
             var userId = GetUserIdFromContext();
-            if (userId is null)
-            {
-                return BadRequest(new { errorMessage = "Couldn't find current user" });
-            }
 
-            var user = await _unitOfWork.Users.GetAsync(userId.Value, cancellationToken);
-            if (user is null)
-            {
-                return BadRequest(new { errorMessage = "Couldn't find current user" });
-            }
+            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
+                       throw new UserNotFoundException(userId);
 
             if (user.OfficeId != id)
             {
-                return BadRequest(new { errorMessage = "You can only edit your own office" });
+                throw new UserDoesNotBelongToOfficeException(userId, id);
             }
 
-            var office = user.Office;
-            if (office is null)
-            {
-                return NotFound();
-            }
+            var office = user.Office ?? throw new OfficeNotFoundException(id);
 
             _mapper.Map(officeInput, office);
+            office.UserList.ForEach(u => u.IsActive = office.IsActive);
+
+            _unitOfWork.Offices.Update(office);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return Ok(new { office });
+        }
+
+        [HttpPatch]
+        [Route("{id:int}/status")]
+        public async Task<IActionResult> PatchAsync(int id, CancellationToken cancellationToken)
+        {
+            var userId = GetUserIdFromContext();
+
+            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
+                       throw new UserNotFoundException(userId);
+
+            if (user.OfficeId != id)
+            {
+                throw new UserDoesNotBelongToOfficeException(userId, id);
+            }
+
+            var office = user.Office ?? throw new OfficeNotFoundException(id);
+
+            office.IsActive = !office.IsActive;
             office.UserList.ForEach(u => u.IsActive = office.IsActive);
 
             _unitOfWork.Offices.Update(office);
@@ -96,61 +107,18 @@ namespace InnoClinic.Controllers
             var office = _mapper.Map<Office>(officeInput);
 
             var userId = GetUserIdFromContext();
-            if (userId is null)
-            {
-                return BadRequest(new { errorMessage = "Couldn't find current user" });
-            }
 
-            var user = await _unitOfWork.Users.GetAsync(userId.Value, cancellationToken);
-            if (user is null)
-            {
-                return BadRequest(new { errorMessage = "Couldn't find current user" });
-            }
+            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
+                       throw new UserNotFoundException(userId);
 
-            if (user.Office is not null)
+            if (user.OfficeId is not null)
             {
-                return BadRequest(new { errorMessage = "You are already tied to an office" });
+                throw new UserAlreadyBelongsToOfficeException(userId, user.OfficeId.Value);
             }
 
             office.UserList.Add(user);
 
             await _unitOfWork.Offices.AddAsync(office, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-            return Ok(new { office });
-        }
-
-        [HttpPatch]
-        [Route("{id:int}/status")]
-        public async Task<IActionResult> PatchAsync(int id, CancellationToken cancellationToken)
-        {
-            var userId = GetUserIdFromContext();
-            if (userId is null)
-            {
-                return BadRequest(new { errorMessage = "Couldn't find current user" });
-            }
-
-            var user = await _unitOfWork.Users.GetAsync(userId.Value, cancellationToken);
-            if (user is null)
-            {
-                return BadRequest(new { errorMessage = "Couldn't find current user" });
-            }
-
-            if (user.OfficeId != id)
-            {
-                return BadRequest(new { errorMessage = "You can only edit your own office" });
-            }
-
-            var office = user.Office;
-            if (office is null)
-            {
-                return NotFound();
-            }
-
-            office.IsActive = !office.IsActive;
-            office.UserList.ForEach(u => u.IsActive = office.IsActive);
-
-            _unitOfWork.Offices.Update(office);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Ok(new { office });

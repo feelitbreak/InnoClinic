@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using InnoClinic.Domain.Exceptions;
 
 namespace InnoClinic.Controllers
 {
     public abstract class BaseController : ControllerBase
     {
-        protected int? GetUserIdFromContext()
+        protected int GetUserIdFromContext()
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -13,10 +14,8 @@ namespace InnoClinic.Controllers
             {
                 return id;
             }
-            else
-            {
-                return null;
-            }
+
+            throw new UserNotIdentifiedException();
         }
     }
 }
