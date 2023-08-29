@@ -11,5 +11,16 @@ namespace InnoClinic.Infrastructure.Repositories
         {
 
         }
+
+        public async Task<Office?> GetAsync(int officeId, int userId, CancellationToken cancellationToken)
+        {
+            var query = DbSet
+                .Where(o => o.Id == officeId)
+                .Include(o => o.Users);
+
+            var users = await query.Select(o => o.Users).FirstOrDefaultAsync(cancellationToken);
+
+            return users?.Find(u => u.Id == userId) != null ? await query.FirstOrDefaultAsync(cancellationToken) : null;
+        }
     }
 }

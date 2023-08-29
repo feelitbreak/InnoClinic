@@ -20,6 +20,7 @@ namespace InnoClinic.Domain.Entities
         [Column("Registry phone number")]
         public long RegistryPhoneNumber { get; set; }
 
-        public virtual List<User> Users { get; } = new();
+        [JsonIgnore]
+        public List<User> Users { get; } = new();
     }
 }

@@ -50,7 +50,7 @@ namespace InnoClinic.Controllers
         {
             var userId = GetUserIdFromContext();
 
-            var office = await _unitOfWork.Users.GetOfficeAsync(userId, officeId, cancellationToken) ??
+            var office = await _unitOfWork.Offices.GetAsync(officeId, userId, cancellationToken) ??
                          throw new NotFoundException("The office was not found.");
 
             _mapper.Map(officeInput, office);
@@ -68,7 +68,7 @@ namespace InnoClinic.Controllers
         {
             var userId = GetUserIdFromContext();
 
-            var office = await _unitOfWork.Users.GetOfficeAsync(userId, officeId, cancellationToken) ??
+            var office = await _unitOfWork.Offices.GetAsync(officeId, userId, cancellationToken) ??
                          throw new NotFoundException("The office was not found.");
 
             office.IsActive = !office.IsActive;
