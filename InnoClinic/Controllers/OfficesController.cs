@@ -40,7 +40,7 @@ namespace InnoClinic.Controllers
         {
             var office = await _unitOfWork.Offices.GetAsync(officeId, cancellationToken);
 
-            return office is null ? throw new OfficeNotFoundException(officeId) : Ok(new { office });
+            return office is null ? throw new NotFoundException("The office was not found.") : Ok(new { office });
         }
 
         [HttpPut]
@@ -51,14 +51,14 @@ namespace InnoClinic.Controllers
             var userId = GetUserIdFromContext();
 
             var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
-                       throw new UserNotFoundException(userId);
+                       throw new NotFoundException("The user was not found.");
 
             if (user.OfficeId != officeId)
             {
-                throw new UserDoesNotBelongToOfficeException(userId, officeId);
+                throw new BadRequestException("You can only edit your own office.");
             }
 
-            var office = user.Office ?? throw new OfficeNotFoundException(officeId);
+            var office = user.Office ?? throw new NotFoundException("The office was not found.");
 
             _mapper.Map(officeInput, office);
             office.Users.ForEach(u => u.IsActive = office.IsActive);
@@ -76,14 +76,14 @@ namespace InnoClinic.Controllers
             var userId = GetUserIdFromContext();
 
             var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
-                       throw new UserNotFoundException(userId);
+                       throw new NotFoundException("The user was not found.");
 
             if (user.OfficeId != officeId)
             {
-                throw new UserDoesNotBelongToOfficeException(userId, officeId);
+                throw new BadRequestException("You can only edit your own office.");
             }
 
-            var office = user.Office ?? throw new OfficeNotFoundException(officeId);
+            var office = user.Office ?? throw new NotFoundException("The office was not found.");
 
             office.IsActive = !office.IsActive;
             office.Users.ForEach(u => u.IsActive = office.IsActive);
@@ -109,11 +109,11 @@ namespace InnoClinic.Controllers
             var userId = GetUserIdFromContext();
 
             var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken) ??
-                       throw new UserNotFoundException(userId);
+                       throw new NotFoundException("The user was not found.");
 
             if (user.OfficeId is not null)
             {
-                throw new UserAlreadyBelongsToOfficeException(userId, user.OfficeId.Value);
+                throw new BadRequestException("You are already tied to an office.");
             }
 
             office.Users.Add(user);

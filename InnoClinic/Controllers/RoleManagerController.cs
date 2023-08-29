@@ -33,7 +33,7 @@ namespace InnoClinic.Controllers
             }
 
             var user = await _unitOfWork.Users.GetByEmailAsync(userRole.UserEmail, cancellationToken) ??
-                       throw new UserEmailNotFoundException(userRole.UserEmail);
+                       throw new NotFoundException("The user was not found.");
 
             user.Role = userRole.Role;
             _unitOfWork.Users.Update(user);

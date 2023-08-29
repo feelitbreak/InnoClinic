@@ -15,7 +15,7 @@ namespace InnoClinic.Controllers
                 return id;
             }
 
-            throw new UserNotIdentifiedException();
+            throw new BadRequestException("Couldn't identify current user.");
         }
     }
 }

@@ -48,7 +48,7 @@ namespace InnoClinic.Controllers
             }
 
             var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken) ??
-                       throw new UserEmailNotFoundException(userSignIn.Email);
+                       throw new NotFoundException("The user was not found.");
 
             var passwordModel = new PasswordModel
             {
@@ -58,7 +58,7 @@ namespace InnoClinic.Controllers
 
             if (!_hashingService.IsValidPassword(userSignIn.Password, passwordModel))
             {
-                throw new InvalidPasswordException();
+                throw new BadRequestException("The password you've entered is incorrect.");
             }
 
             var token = _tokenService.GenerateToken(user);
