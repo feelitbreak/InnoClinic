@@ -13,14 +13,14 @@ namespace InnoClinic.Controllers
     [ApiController]
     [Route("office-management")]
     [Authorize(Roles = nameof(Role.Receptionist))]
-    public class OfficesController : BaseController
+    public class OfficeController : BaseController
     {
-        private readonly ILogger<OfficesController> _logger;
+        private readonly ILogger<OfficeController> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<OfficeDto> _validatorOffice;
 
-        public OfficesController(ILogger<OfficesController> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<OfficeDto> validatorOffice) : base(logger)
+        public OfficeController(ILogger<OfficeController> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<OfficeDto> validatorOffice) : base(logger)
         {
             _logger = logger;
             _mapper = mapper;
