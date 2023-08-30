@@ -43,7 +43,7 @@ namespace InnoClinic.Controllers
 
         [HttpGet]
         [Route("{officeId:int}")]
-        public async Task<IActionResult> GetAsync(int officeId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAsync([FromRoute] int officeId, CancellationToken cancellationToken)
         {
             var office = await _unitOfWork.Offices.GetAsync(officeId, cancellationToken);
 
@@ -58,7 +58,7 @@ namespace InnoClinic.Controllers
 
         [HttpPut]
         [Route("{officeId:int}")]
-        public async Task<IActionResult> UpdateOfficeAsync(int officeId, [FromBody] OfficeDto officeInput,
+        public async Task<IActionResult> UpdateOfficeAsync([FromRoute] int officeId, [FromBody] OfficeDto officeInput,
             CancellationToken cancellationToken)
         {
             var userId = GetUserIdFromContext();
@@ -85,7 +85,7 @@ namespace InnoClinic.Controllers
 
         [HttpPatch]
         [Route("{officeId:int}/status")]
-        public async Task<IActionResult> PatchOfficeStatusAsync(int officeId, CancellationToken cancellationToken)
+        public async Task<IActionResult> PatchOfficeStatusAsync([FromRoute] int officeId, CancellationToken cancellationToken)
         {
             var userId = GetUserIdFromContext();
 
