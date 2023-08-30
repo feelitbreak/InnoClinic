@@ -29,7 +29,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
             var offices = await _unitOfWork.Offices.GetAsync(cancellationToken);
 
@@ -53,7 +53,7 @@ namespace InnoClinic.Controllers
 
         [HttpPut]
         [Route("{officeId:int}")]
-        public async Task<IActionResult> PutAsync(int officeId, [FromBody] OfficeDto officeInput,
+        public async Task<IActionResult> UpdateOfficeAsync(int officeId, [FromBody] OfficeDto officeInput,
             CancellationToken cancellationToken)
         {
             var userId = GetUserIdFromContext();
@@ -80,7 +80,7 @@ namespace InnoClinic.Controllers
 
         [HttpPatch]
         [Route("{officeId:int}/status")]
-        public async Task<IActionResult> PatchAsync(int officeId, CancellationToken cancellationToken)
+        public async Task<IActionResult> PatchOfficeStatusAsync(int officeId, CancellationToken cancellationToken)
         {
             var userId = GetUserIdFromContext();
 
@@ -107,7 +107,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("creation")]
-        public async Task<IActionResult> PostAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {
             var validationResult = await _validatorOffice.ValidateAsync(officeInput, cancellationToken);
 

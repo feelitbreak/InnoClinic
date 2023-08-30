@@ -25,7 +25,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] UserRoleDto userRole, CancellationToken cancellationToken)
+        public async Task<IActionResult> ChangeRoleAsync([FromBody] UserRoleDto userRole, CancellationToken cancellationToken)
         {
             var validationResult = await _validatorUserRole.ValidateAsync(userRole, cancellationToken);
 
