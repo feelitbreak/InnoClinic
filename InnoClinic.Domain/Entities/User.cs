@@ -19,6 +19,6 @@ namespace InnoClinic.Domain.Entities
         public int? OfficeId { get; set; }
 
         [JsonIgnore]
-        public virtual Office? Office { get; set; }
+        public Office? Office { get; set; }
     }
 }

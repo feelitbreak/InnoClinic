@@ -14,7 +14,6 @@ namespace InnoClinic.Infrastructure.Extensions
         {
             services.AddDbContext<ClinicDbContext>(options =>
             options
-            .UseLazyLoadingProxies()
             .UseSqlServer(configuration.GetConnectionString(ConnectionStringName)));
         }
 

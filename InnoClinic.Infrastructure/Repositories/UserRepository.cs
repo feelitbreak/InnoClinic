@@ -9,6 +9,7 @@ namespace InnoClinic.Infrastructure.Repositories
     {
         public UserRepository(DbContext context) : base(context)
         {
+
         }
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)

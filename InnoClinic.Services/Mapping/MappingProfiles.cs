@@ -4,7 +4,7 @@ using InnoClinic.Domain.DTOs;
 
 namespace InnoClinic.Services.Mapping
 {
-    public class MappingProfiles : Profile
+    internal sealed class MappingProfiles : Profile
     {
         public MappingProfiles()
         {
