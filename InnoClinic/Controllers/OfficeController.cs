@@ -31,7 +31,12 @@ namespace InnoClinic.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            var offices = await _unitOfWork.Offices.GetAsync(cancellationToken);
+            var offices = await _unitOfWork.Offices.GetAllAsync(cancellationToken);
+
+            if (offices.Any())
+            {
+                return NoContent();
+            }
 
             return Ok(new { offices });
         }

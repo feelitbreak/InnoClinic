@@ -12,7 +12,7 @@ namespace InnoClinic.Infrastructure.Implementation
             DbSet = context.Set<T>();
         }
 
-        public async Task<List<T>> GetAsync(CancellationToken cancellationToken)
+        public async Task<List<T>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await DbSet.ToListAsync(cancellationToken);
         }

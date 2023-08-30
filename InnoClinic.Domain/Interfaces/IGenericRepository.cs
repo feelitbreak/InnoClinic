@@ -2,7 +2,7 @@
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<List<T>> GetAsync(CancellationToken cancellationToken);
+        Task<List<T>> GetAllAsync(CancellationToken cancellationToken);
 
         Task<T?> GetAsync(int id, CancellationToken cancellationToken);
 
