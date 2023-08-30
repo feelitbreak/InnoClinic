@@ -63,7 +63,7 @@ namespace InnoClinic.Controllers
         {
             var userId = GetUserIdFromContext();
 
-            var office = await _unitOfWork.Offices.GetAsync(officeId, userId, cancellationToken);
+            var office = await _unitOfWork.Offices.GetOfficeWithSpecifiedUserAsync(officeId, userId, cancellationToken);
             if (office is null)
             {
                 _logger.LogError(
@@ -89,7 +89,7 @@ namespace InnoClinic.Controllers
         {
             var userId = GetUserIdFromContext();
 
-            var office = await _unitOfWork.Offices.GetAsync(officeId, userId, cancellationToken);
+            var office = await _unitOfWork.Offices.GetOfficeWithSpecifiedUserAsync(officeId, userId, cancellationToken);
             if (office is null)
             {
                 _logger.LogError(
