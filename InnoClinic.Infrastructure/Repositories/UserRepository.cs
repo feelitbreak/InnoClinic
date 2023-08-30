@@ -2,6 +2,7 @@
 using InnoClinic.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using InnoClinic.Infrastructure.Implementation;
+using Microsoft.Extensions.Logging;
 
 namespace InnoClinic.Infrastructure.Repositories
 {
@@ -10,6 +11,11 @@ namespace InnoClinic.Infrastructure.Repositories
         public UserRepository(DbContext context) : base(context)
         {
 
+        }
+
+        public async Task<bool> EmailExists(string email, CancellationToken cancellationToken)
+        {
+            return await DbSet.AnyAsync(u => u.Email.Equals(email), cancellationToken);
         }
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)

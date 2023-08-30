@@ -33,9 +33,7 @@ namespace InnoClinic.Services.Validators
 
         private async Task<bool> IsUniqueEmailAsync(string email, CancellationToken cancellationToken)
         {
-            var userWithSameEmail = await _unitOfWork.Users.GetByEmailAsync(email, cancellationToken);
-
-            return userWithSameEmail is null;
+            return !await _unitOfWork.Users.EmailExists(email, cancellationToken);
         }
     }
 }
