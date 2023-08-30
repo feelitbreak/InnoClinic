@@ -11,13 +11,10 @@ namespace InnoClinic.Domain.Entities
 
         public string Street { get; set; }
 
-        [Column("House number")]
         public string HouseNumber { get; set; }
 
-        [Column("Office number")]
         public string OfficeNumber { get; set; }
 
-        [Column("Registry phone number")]
         public long RegistryPhoneNumber { get; set; }
 
         [JsonIgnore]
