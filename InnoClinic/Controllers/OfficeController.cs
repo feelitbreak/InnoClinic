@@ -114,18 +114,6 @@ namespace InnoClinic.Controllers
         [HttpPost("creation")]
         public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {
-            var validationResult = await _validatorOffice.ValidateAsync(officeInput, cancellationToken);
-
-            if (!validationResult.IsValid)
-            {
-                _logger.LogError(
-                    "The input for the office creation was invalid. Validation errors: {validationErrors}",
-                    validationResult.Errors);
-                return BadRequest(validationResult.Errors);
-            }
-
-            var office = _mapper.Map<Office>(officeInput);
-
             var userId = GetUserIdFromContext();
 
             var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken);
@@ -142,6 +130,18 @@ namespace InnoClinic.Controllers
                     userId, user.OfficeId);
                 throw new BadRequestException("You are already tied to an office.");
             }
+
+            var validationResult = await _validatorOffice.ValidateAsync(officeInput, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                _logger.LogError(
+                    "The input for the office creation was invalid. Validation errors: {validationErrors}",
+                    validationResult.Errors);
+                return BadRequest(validationResult.Errors);
+            }
+
+            var office = _mapper.Map<Office>(officeInput);
 
             office.Users.Add(user);
 
