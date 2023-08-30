@@ -15,6 +15,7 @@ namespace InnoClinic.Controllers
     [Route("authorization")]
     public class AuthorizationController : BaseController
     {
+        private readonly ILogger<AuthorizationController> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IPasswordHashingService _hashingService;
@@ -22,13 +23,15 @@ namespace InnoClinic.Controllers
         private readonly IValidator<UserSignInDto> _validatorUserSignIn;
         private readonly IValidator<UserSignUpDto> _validatorUserSignUp;
 
-        public AuthorizationController(IMapper mapper,
+        public AuthorizationController(ILogger<AuthorizationController> logger,
+            IMapper mapper,
             IUnitOfWork unitOfWork,
             IPasswordHashingService hashingService,
             ITokenService tokenService,
             IValidator<UserSignInDto> validatorUserSignIn,
-            IValidator<UserSignUpDto> validatorUserSignUp)
+            IValidator<UserSignUpDto> validatorUserSignUp) : base(logger)
         {
+            _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _hashingService = hashingService;
@@ -44,11 +47,16 @@ namespace InnoClinic.Controllers
 
             if (!validationResult.IsValid)
             {
+                _logger.LogError("The input for sign-in was invalid. Validation errors: {validationErrors}", validationResult.Errors);
                 return BadRequest(validationResult.Errors);
             }
 
-            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken) ??
-                       throw new NotFoundException("The user was not found.");
+            var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken);
+            if (user is null)
+            {
+                _logger.LogError("The user with the email {userEmail} was not found.", userSignIn.Email);
+                throw new NotFoundException("The user was not found.");
+            }
 
             var passwordModel = new PasswordModel
             {
@@ -58,6 +66,7 @@ namespace InnoClinic.Controllers
 
             if (!_hashingService.IsValidPassword(userSignIn.Password, passwordModel))
             {
+                _logger.LogError("Entered incorrect password for the user with the email {userEmail}.", userSignIn.Email);
                 throw new BadRequestException("The password you've entered is incorrect.");
             }
 
@@ -73,6 +82,7 @@ namespace InnoClinic.Controllers
 
             if (!validationResult.IsValid)
             {
+                _logger.LogError("The input for sign-in was invalid. Validation errors: {validationErrors}", validationResult.Errors);
                 return BadRequest(validationResult.Errors);
             }
 
@@ -84,6 +94,8 @@ namespace InnoClinic.Controllers
 
             await _unitOfWork.Users.AddAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation("A new user with the email {userEmail} has been added to the database.", user.Email);
 
             return NoContent();
         }

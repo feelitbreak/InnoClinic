@@ -6,6 +6,13 @@ namespace InnoClinic.Controllers
 {
     public abstract class BaseController : ControllerBase
     {
+        private readonly ILogger _logger;
+
+        protected BaseController(ILogger logger)
+        {
+            _logger = logger;
+        }
+
         protected int GetUserIdFromContext()
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -15,7 +22,8 @@ namespace InnoClinic.Controllers
                 return id;
             }
 
-            throw new BadRequestException("Couldn't identify current user.");
+            _logger.LogError("Couldn't identify the current user from the context.");
+            throw new BadRequestException("Couldn't identify the current user.");
         }
     }
 }
