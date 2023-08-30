@@ -54,7 +54,7 @@ namespace InnoClinic.Controllers
             var user = await _unitOfWork.Users.GetByEmailAsync(userSignIn.Email, cancellationToken);
             if (user is null)
             {
-                _logger.LogError("The user with the email {userEmail} was not found.", userSignIn.Email);
+                _logger.LogError("The user with the email {userEmail} was not found or is not active.", userSignIn.Email);
                 throw new NotFoundException("The user was not found.");
             }
 
