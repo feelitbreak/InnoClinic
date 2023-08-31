@@ -58,12 +58,12 @@ namespace InnoClinic.Controllers
 
         [HttpPut]
         [Route("{officeId:int}")]
-        public async Task<IActionResult> UpdateOfficeAsync([FromRoute] int officeId, [FromBody] OfficeDto officeInput,
+        public async Task<IActionResult> UpdateOfficeAsync([FromRoute] int officeId, [FromBody] OfficeDto officeDtoRequest,
             CancellationToken cancellationToken)
         {
-            var userId = GetUserIdFromContext();
+            var userId = GetUserId();
 
-            var office = await _unitOfWork.Offices.GetOfficeWithSpecifiedUserAsync(officeId, userId, cancellationToken);
+            var office = await _unitOfWork.Offices.GetOfficeAsync(officeId, userId, cancellationToken);
             if (office is null)
             {
                 _logger.LogError(
@@ -72,8 +72,7 @@ namespace InnoClinic.Controllers
                 throw new NotFoundException("The office was not found.");
             }
 
-            _mapper.Map(officeInput, office);
-            office.Users.ForEach(u => u.IsActive = office.IsActive);
+            OfficeDto.ToDomain(officeDtoRequest, office);
 
             _unitOfWork.Offices.Update(office);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -87,9 +86,9 @@ namespace InnoClinic.Controllers
         [Route("{officeId:int}/status")]
         public async Task<IActionResult> PatchOfficeStatusAsync([FromRoute] int officeId, CancellationToken cancellationToken)
         {
-            var userId = GetUserIdFromContext();
+            var userId = GetUserId();
 
-            var office = await _unitOfWork.Offices.GetOfficeWithSpecifiedUserAsync(officeId, userId, cancellationToken);
+            var office = await _unitOfWork.Offices.GetOfficeAsync(officeId, userId, cancellationToken);
             if (office is null)
             {
                 _logger.LogError(
@@ -114,7 +113,7 @@ namespace InnoClinic.Controllers
         [HttpPost("creation")]
         public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {
-            var userId = GetUserIdFromContext();
+            var userId = GetUserId();
 
             var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken);
             if (user is null)

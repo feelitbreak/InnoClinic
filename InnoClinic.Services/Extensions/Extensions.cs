@@ -10,7 +10,7 @@ namespace InnoClinic.Services.Extensions
     {
         public static void AddProjectServices(this IServiceCollection services)
         {
-            services.AddScoped<IPasswordEncryptionService, PasswordEncryptionService>();
+            services.AddScoped<IEncryptionService, EncryptionService>();
             services.AddScoped<ITokenService, TokenService>();
 
             services.AddValidatorsFromAssemblyContaining<UserSignUpValidator>();

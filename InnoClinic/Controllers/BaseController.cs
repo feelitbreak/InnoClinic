@@ -13,7 +13,7 @@ namespace InnoClinic.Controllers
             _logger = logger;
         }
 
-        protected int GetUserIdFromContext()
+        protected int GetUserId()
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 

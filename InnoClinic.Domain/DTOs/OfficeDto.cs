@@ -1,4 +1,6 @@
-﻿namespace InnoClinic.Domain.DTOs
+﻿using InnoClinic.Domain.Entities;
+
+namespace InnoClinic.Domain.DTOs
 {
     public class OfficeDto
     {
@@ -15,5 +17,15 @@
         public long RegistryPhoneNumber { get; set; }
 
         public bool IsActive { get; set; }
+
+        public static void ToDomain(OfficeDto officeDto, Office office)
+        {
+            office.City = officeDto.City.Trim();
+            office.HouseNumber = officeDto.HouseNumber.Trim();
+            office.OfficeNumber = officeDto.OfficeNumber.Trim();
+            office.Photo = officeDto.Photo;
+            office.RegistryPhoneNumber = officeDto.RegistryPhoneNumber;
+            office.Street = officeDto.Street.Trim();
+        }
     }
 }

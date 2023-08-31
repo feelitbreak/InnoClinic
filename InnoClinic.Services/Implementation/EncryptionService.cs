@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 
 namespace InnoClinic.Services.Implementation
 {
-    public class PasswordEncryptionService : IPasswordEncryptionService
+    public class EncryptionService : IEncryptionService
     {
         private const int SaltSize = 32;
 

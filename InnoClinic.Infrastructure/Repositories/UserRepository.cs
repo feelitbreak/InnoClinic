@@ -2,7 +2,6 @@
 using InnoClinic.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using InnoClinic.Infrastructure.Implementation;
-using Microsoft.Extensions.Logging;
 
 namespace InnoClinic.Infrastructure.Repositories
 {

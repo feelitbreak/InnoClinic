@@ -18,7 +18,7 @@ namespace InnoClinic.Controllers
         private readonly ILogger<AuthorizationController> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPasswordEncryptionService _encryptionService;
+        private readonly IEncryptionService _encryptionService;
         private readonly ITokenService _tokenService;
         private readonly IValidator<UserSignInDto> _validatorUserSignIn;
         private readonly IValidator<UserSignUpDto> _validatorUserSignUp;
@@ -26,7 +26,7 @@ namespace InnoClinic.Controllers
         public AuthorizationController(ILogger<AuthorizationController> logger,
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IPasswordEncryptionService encryptionService,
+            IEncryptionService encryptionService,
             ITokenService tokenService,
             IValidator<UserSignInDto> validatorUserSignIn,
             IValidator<UserSignUpDto> validatorUserSignUp) : base(logger)

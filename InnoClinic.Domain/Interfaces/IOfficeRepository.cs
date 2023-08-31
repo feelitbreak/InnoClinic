@@ -4,6 +4,6 @@ namespace InnoClinic.Domain.Interfaces
 {
     public interface IOfficeRepository : IGenericRepository<Office>
     {
-        Task<Office?> GetOfficeWithSpecifiedUserAsync(int officeId, int userId, CancellationToken cancellationToken);
+        Task<Office?> GetOfficeAsync(int officeId, int userId, CancellationToken cancellationToken);
     }
 }

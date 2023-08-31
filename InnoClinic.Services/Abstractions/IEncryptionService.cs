@@ -2,7 +2,7 @@
 
 namespace InnoClinic.Services.Abstractions
 {
-    public interface IPasswordEncryptionService
+    public interface IEncryptionService
     {
         PasswordModel EncodePassword(string password);
 

@@ -12,7 +12,7 @@ namespace InnoClinic.Infrastructure.Repositories
 
         }
 
-        public async Task<Office?> GetOfficeWithSpecifiedUserAsync(int officeId, int userId, CancellationToken cancellationToken)
+        public async Task<Office?> GetOfficeAsync(int officeId, int userId, CancellationToken cancellationToken)
         {
             var query = DbSet
                 .Where(o => o.Id == officeId)
