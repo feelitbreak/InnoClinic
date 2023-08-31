@@ -18,7 +18,7 @@ namespace InnoClinic.Controllers
         private readonly ILogger<AuthorizationController> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IPasswordHashingService _hashingService;
+        private readonly IPasswordEncryptionService _encryptionService;
         private readonly ITokenService _tokenService;
         private readonly IValidator<UserSignInDto> _validatorUserSignIn;
         private readonly IValidator<UserSignUpDto> _validatorUserSignUp;
@@ -26,7 +26,7 @@ namespace InnoClinic.Controllers
         public AuthorizationController(ILogger<AuthorizationController> logger,
             IMapper mapper,
             IUnitOfWork unitOfWork,
-            IPasswordHashingService hashingService,
+            IPasswordEncryptionService encryptionService,
             ITokenService tokenService,
             IValidator<UserSignInDto> validatorUserSignIn,
             IValidator<UserSignUpDto> validatorUserSignUp) : base(logger)
@@ -34,7 +34,7 @@ namespace InnoClinic.Controllers
             _logger = logger;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _hashingService = hashingService;
+            _encryptionService = encryptionService;
             _tokenService = tokenService;
             _validatorUserSignIn = validatorUserSignIn;
             _validatorUserSignUp = validatorUserSignUp;
@@ -64,7 +64,7 @@ namespace InnoClinic.Controllers
                 Salt = user.Salt
             };
 
-            if (!_hashingService.IsValidPassword(userSignIn.Password, passwordModel))
+            if (!_encryptionService.IsValidPassword(userSignIn.Password, passwordModel))
             {
                 _logger.LogError("Entered incorrect password for the user with the email {userEmail}.", userSignIn.Email);
                 throw new BadRequestException("The password you've entered is incorrect.");
@@ -87,7 +87,7 @@ namespace InnoClinic.Controllers
             }
 
             var user = _mapper.Map<User>(userSignUp);
-            var passwordModel = _hashingService.EncodePassword(userSignUp.Password);
+            var passwordModel = _encryptionService.EncodePassword(userSignUp.Password);
             user.HashedPassword = passwordModel.Key;
             user.Salt = passwordModel.Salt;
             user.Role = Role.Patient;
