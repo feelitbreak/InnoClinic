@@ -90,7 +90,7 @@ namespace InnoClinic.Controllers
             var passwordModel = _hashingService.EncodePassword(userSignUp.Password);
             user.HashedPassword = passwordModel.Key;
             user.Salt = passwordModel.Salt;
-            user.Role = Role.User;
+            user.Role = Role.Patient;
 
             await _unitOfWork.Users.AddAsync(user, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

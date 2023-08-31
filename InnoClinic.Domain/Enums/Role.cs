@@ -2,7 +2,6 @@
 {
     public enum Role
     {
-        User,
         Patient,
         Receptionist,
         Doctor,
