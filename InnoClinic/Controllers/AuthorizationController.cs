@@ -12,7 +12,8 @@ using InnoClinic.Domain.Exceptions;
 namespace InnoClinic.Controllers
 {
     [ApiController]
-    [Route("authorization")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class AuthorizationController : BaseController
     {
         private readonly ILogger<AuthorizationController> _logger;
@@ -40,6 +41,7 @@ namespace InnoClinic.Controllers
             _validatorUserSignUp = validatorUserSignUp;
         }
 
+        [MapToApiVersion("1.0")]
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignInAsync([FromBody] UserSignInDto userSignIn, CancellationToken cancellationToken)
         {
@@ -75,6 +77,7 @@ namespace InnoClinic.Controllers
             return Ok(new { token });
         }
 
+        [MapToApiVersion("1.0")]
         [HttpPost("sign-up")]
         public async Task<IActionResult> SignUpAsync([FromBody] UserSignUpDto userSignUp, CancellationToken cancellationToken)
         {

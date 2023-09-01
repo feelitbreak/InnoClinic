@@ -14,6 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGenConfiguration();
 
+builder.Services.ConfigureApiVersioning();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddSqlServerDb(builder.Configuration);

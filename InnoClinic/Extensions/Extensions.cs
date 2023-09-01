@@ -2,6 +2,8 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using InnoClinic.Middleware;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
 
 namespace InnoClinic.Extensions
@@ -38,6 +40,19 @@ namespace InnoClinic.Extensions
                         Array.Empty<string>()
                     }
                 });
+            });
+        }
+
+        public static void ConfigureApiVersioning(this IServiceCollection services)
+        {
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
+                    new HeaderApiVersionReader("x-api-version"),
+                    new MediaTypeApiVersionReader("x-api-version"));
             });
         }
 

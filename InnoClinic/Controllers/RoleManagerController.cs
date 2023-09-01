@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace InnoClinic.Controllers
 {
     [ApiController]
-    [Route("role-manager")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     [Authorize(Roles = nameof(Role.Administrator))]
     public class RoleManagerController : BaseController
     {
@@ -24,6 +25,7 @@ namespace InnoClinic.Controllers
             _validatorUserRole = validatorUserRole;
         }
 
+        [MapToApiVersion("1.0")]
         [HttpPost]
         public async Task<IActionResult> ChangeRoleAsync([FromBody] UserRoleDto userRole, CancellationToken cancellationToken)
         {
