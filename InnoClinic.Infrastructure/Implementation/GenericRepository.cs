@@ -1,46 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-using InnoClinic.Domain.Interfaces;
+﻿using InnoClinic.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace InnoClinic.Infrastructure.Implementation
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        protected readonly DbSet<T> _dbSet;
+        protected readonly DbSet<T> DbSet;
 
-        public GenericRepository(ClinicDbContext context)
+        public GenericRepository(DbContext context)
         {
-            _dbSet = context.Set<T>();
+            DbSet = context.Set<T>();
         }
 
-        public async Task<List<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await _dbSet.ToListAsync();
+            return await DbSet.ToListAsync(cancellationToken);
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetAsync(int id, CancellationToken cancellationToken)
         {
-            return await _dbSet.FindAsync(id);
+            return await DbSet.FindAsync(new object[] { id }, cancellationToken);
         }
 
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(T entity, CancellationToken cancellationToken)
         {
-            await _dbSet.AddAsync(entity);
+            await DbSet.AddAsync(entity, cancellationToken);
+        }
+
+        public async Task AddAsync(List<T> entities, CancellationToken cancellationToken)
+        {
+            await DbSet.AddRangeAsync(entities, cancellationToken);
         }
 
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
+            DbSet.Update(entity);
         }
 
         public void Remove(T entity)
         {
-            _dbSet.Remove(entity);
+            DbSet.Remove(entity);
         }
     }
 }

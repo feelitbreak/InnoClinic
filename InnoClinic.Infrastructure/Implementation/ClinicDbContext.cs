@@ -11,9 +11,11 @@ namespace InnoClinic.Infrastructure.Implementation
 
         public DbSet<User> Users { get; set; }
 
+        public DbSet<Office> Offices { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().ToTable("Users");
+            
         }
     }
 }

@@ -1,11 +1,6 @@
 ﻿using FluentValidation;
 using InnoClinic.Domain.DTOs;
 using InnoClinic.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InnoClinic.Services.Validators
 {
@@ -36,11 +31,9 @@ namespace InnoClinic.Services.Validators
                 .WithMessage("The passwords you’ve entered don’t coincide");
         }
 
-        private async Task<bool> IsUniqueEmailAsync(string email, CancellationToken token)
+        private async Task<bool> IsUniqueEmailAsync(string email, CancellationToken cancellationToken)
         {
-            var userWithSameEmail = await _unitOfWork.Users.GetByEmailAsync(email);
-
-            return userWithSameEmail is null;
+            return !await _unitOfWork.Users.EmailExists(email, cancellationToken);
         }
     }
 }
