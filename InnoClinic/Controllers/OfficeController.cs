@@ -29,7 +29,6 @@ namespace InnoClinic.Controllers
             _validatorOffice = validatorOffice;
         }
 
-        [MapToApiVersion("1.0")]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
@@ -43,7 +42,6 @@ namespace InnoClinic.Controllers
             return Ok(new { offices });
         }
 
-        [MapToApiVersion("1.0")]
         [HttpGet]
         [Route("{officeId:int}")]
         public async Task<IActionResult> GetAsync([FromRoute] int officeId, CancellationToken cancellationToken)
@@ -59,7 +57,6 @@ namespace InnoClinic.Controllers
             throw new NotFoundException("The office was not found.");
         }
 
-        [MapToApiVersion("1.0")]
         [HttpPut]
         [Route("{officeId:int}")]
         public async Task<IActionResult> UpdateOfficeAsync([FromRoute] int officeId, [FromBody] OfficeDto officeDtoRequest,
@@ -86,7 +83,6 @@ namespace InnoClinic.Controllers
             return Ok(new { office });
         }
 
-        [MapToApiVersion("1.0")]
         [HttpPatch]
         [Route("{officeId:int}/status")]
         public async Task<IActionResult> PatchOfficeStatusAsync([FromRoute] int officeId, CancellationToken cancellationToken)
@@ -115,7 +111,6 @@ namespace InnoClinic.Controllers
             return Ok(new { office });
         }
 
-        [MapToApiVersion("1.0")]
         [HttpPost("creation")]
         public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
         {

@@ -25,7 +25,6 @@ namespace InnoClinic.Controllers
             _validatorUserRole = validatorUserRole;
         }
 
-        [MapToApiVersion("1.0")]
         [HttpPost]
         public async Task<IActionResult> ChangeRoleAsync([FromBody] UserRoleDto userRole, CancellationToken cancellationToken)
         {
