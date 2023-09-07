@@ -1,5 +1,7 @@
-﻿using InnoClinic.Domain.Interfaces;
+﻿using InnoClinic.Domain.DTOs;
+using InnoClinic.Domain.Interfaces;
 using InnoClinic.Domain.Entities;
+using InnoClinic.Domain.Extensions;
 using Microsoft.EntityFrameworkCore;
 using InnoClinic.Infrastructure.Implementation;
 
@@ -20,6 +22,12 @@ namespace InnoClinic.Infrastructure.Repositories
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
         {
             return await DbSet.SingleOrDefaultAsync(u => u.Email.Equals(email) && u.IsActive, cancellationToken);
+        }
+
+        public async Task<User?> FindPatientProfileAsync(PatientProfileDto patientProfile,
+            CancellationToken cancellationToken)
+        {
+            return await DbSet.FirstOrDefaultAsync(u => u.Matches(patientProfile) && u.IsLinkedToAccount == false, cancellationToken);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using InnoClinic.Domain.Entities;
+﻿using InnoClinic.Domain.DTOs;
+using InnoClinic.Domain.Entities;
 
 namespace InnoClinic.Domain.Interfaces
 {
@@ -7,5 +8,8 @@ namespace InnoClinic.Domain.Interfaces
         Task<bool> EmailExists(string email, CancellationToken cancellationToken);
 
         Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken);
+
+        Task<User?> FindPatientProfileAsync(PatientProfileDto patientProfile,
+            CancellationToken cancellationToken);
     }
 }
