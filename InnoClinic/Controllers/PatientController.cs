@@ -13,14 +13,14 @@ namespace InnoClinic.Controllers
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiVersion("1.0")]
     [Authorize]
-    public class ProfileController : BaseController
+    public class PatientController : BaseController
     {
-        private readonly ILogger<ProfileController> _logger;
+        private readonly ILogger<PatientController> _logger;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IValidator<PatientProfileDto> _validatorPatientProfile;
 
-        public ProfileController(ILogger<ProfileController> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<PatientProfileDto> validatorPatientProfile) : base(logger)
+        public PatientController(ILogger<PatientController> logger, IMapper mapper, IUnitOfWork unitOfWork, IValidator<PatientProfileDto> validatorPatientProfile) : base(logger)
         {
             _logger = logger;
             _mapper = mapper;
@@ -51,7 +51,7 @@ namespace InnoClinic.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var matchingProfile = await _unitOfWork.Users.FindPatientProfileAsync(patientProfile, cancellationToken);
+            var matchingProfile = await _unitOfWork.Patients.FindMatchingAsync(patientProfile, cancellationToken);
             if (matchingProfile is null)
             {
                 _mapper.Map(patientProfile, user);

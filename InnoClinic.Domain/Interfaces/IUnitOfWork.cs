@@ -6,6 +6,10 @@
 
         IOfficeRepository Offices { get; }
 
+        IPatientRepository Patients { get; }
+
+        IReceptionistRepository Receptionists { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

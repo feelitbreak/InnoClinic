@@ -13,25 +13,14 @@ namespace InnoClinic.Domain.Entities
 
         public Role Role { get; set; }
 
-        public bool IsEmailVerified { get; set; }
-
         public byte[]? Photo { get; set; }
 
-        public string FirstName { get; set; }
+        public bool IsEmailVerified { get; set; }
 
-        public string LastName { get; set; }
+        public Patient? Patient { get; set; }
 
-        public string MiddleName { get; set; }
+        public Receptionist? Receptionist { get; set; }
 
-        public long PhoneNumber { get; set; }
-
-        public DateTime DateOfBirth { get; set; }
-
-        public bool? IsLinkedToAccount { get; set; }
-
-        public int? OfficeId { get; set; }
-
-        [JsonIgnore]
-        public Office? Office { get; set; }
+        //public Doctor? Doctor { get; set; }
     }
 }

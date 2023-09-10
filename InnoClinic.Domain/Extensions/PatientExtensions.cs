@@ -8,31 +8,31 @@ using System.Threading.Tasks;
 
 namespace InnoClinic.Domain.Extensions
 {
-    public static class UserExtensions
+    public static class PatientExtensions
     {
         private const int NameMatchWeight = 5;
         private const int DateMatchWeight = 3;
         private const int MatchLimit = 13;
 
-        public static bool Matches(this User user, PatientProfileDto patientProfile)
+        public static bool Matches(this Patient patient, PatientProfileDto patientProfile)
         {
             var coefficient = 0;
-            if (patientProfile.FirstName.Equals(user.FirstName))
+            if (patientProfile.FirstName.Equals(patient.FirstName))
             {
                 coefficient += NameMatchWeight;
             }
 
-            if (patientProfile.LastName.Equals(user.LastName))
+            if (patientProfile.LastName.Equals(patient.LastName))
             {
                 coefficient += NameMatchWeight;
             }
 
-            if (patientProfile.MiddleName.Equals(user.MiddleName))
+            if (patientProfile.MiddleName.Equals(patient.MiddleName))
             {
                 coefficient += NameMatchWeight;
             }
 
-            if (patientProfile.DateOfBirth.Equals(user.DateOfBirth))
+            if (patientProfile.DateOfBirth.Equals(patient.DateOfBirth))
             {
                 coefficient += DateMatchWeight;
             }

@@ -23,11 +23,5 @@ namespace InnoClinic.Infrastructure.Repositories
         {
             return await DbSet.SingleOrDefaultAsync(u => u.Email.Equals(email) && u.IsActive, cancellationToken);
         }
-
-        public async Task<User?> FindPatientProfileAsync(PatientProfileDto patientProfile,
-            CancellationToken cancellationToken)
-        {
-            return await DbSet.FirstOrDefaultAsync(u => u.Matches(patientProfile) && u.IsLinkedToAccount == false, cancellationToken);
-        }
     }
 }

@@ -99,7 +99,8 @@ namespace InnoClinic.Controllers
             }
 
             office.IsActive = !office.IsActive;
-            office.Users.ForEach(u => u.IsActive = office.IsActive);
+            office.Receptionists.ForEach(r => r.IsActive = office.IsActive);
+            //office.Doctors.ForEach(d => d.IsActive = office.IsActive);
 
             _unitOfWork.Offices.Update(office);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -116,18 +117,18 @@ namespace InnoClinic.Controllers
         {
             var userId = GetUserId();
 
-            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken);
-            if (user is null)
+            var receptionist = await _unitOfWork.Receptionists.GetReceptionistAsync(userId, cancellationToken);
+            if (receptionist is null)
             {
-                _logger.LogError("The user with the identifier {userId} was not found.", userId);
+                _logger.LogError("The receptionist with the user identifier {userId} was not found.", userId);
                 throw new NotFoundException("The user was not found.");
             }
 
-            if (user.OfficeId is not null)
+            if (receptionist.OfficeId is not null)
             {
                 _logger.LogError(
-                    "The user with the identifier {userId} is already tied to the office with the identifier {officeId}.",
-                    userId, user.OfficeId);
+                    "The receptionist with the identifier {receptionistId} is already tied to the office with the identifier {officeId}.",
+                    receptionist.Id, receptionist.OfficeId);
                 throw new BadRequestException("You are already tied to an office.");
             }
 
@@ -143,7 +144,7 @@ namespace InnoClinic.Controllers
 
             var office = _mapper.Map<Office>(officeDto);
 
-            office.Users.Add(user);
+            office.Receptionists.Add(receptionist);
 
             await _unitOfWork.Offices.AddAsync(office, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

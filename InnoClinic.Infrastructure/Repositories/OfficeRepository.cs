@@ -16,11 +16,11 @@ namespace InnoClinic.Infrastructure.Repositories
         {
             var query = DbSet
                 .Where(o => o.Id == officeId)
-                .Include(o => o.Users);
+                .Include(o => o.Receptionists);
 
-            var users = await query.Select(o => o.Users).FirstOrDefaultAsync(cancellationToken);
+            var receptionists = await query.Select(o => o.Receptionists).FirstOrDefaultAsync(cancellationToken);
 
-            return users?.Find(u => u.Id == userId) != null ? await query.FirstOrDefaultAsync(cancellationToken) : null;
+            return receptionists?.Find(r => r.UserId == userId) != null ? await query.FirstOrDefaultAsync(cancellationToken) : null;
         }
     }
 }
