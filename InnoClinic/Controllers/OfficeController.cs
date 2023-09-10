@@ -113,7 +113,7 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("creation")]
-        public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDto officeDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDto officeDtoRequest, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
 
@@ -132,7 +132,7 @@ namespace InnoClinic.Controllers
                 throw new BadRequestException("You are already tied to an office.");
             }
 
-            var validationResult = await _validatorOffice.ValidateAsync(officeDto, cancellationToken);
+            var validationResult = await _validatorOffice.ValidateAsync(officeDtoRequest, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -142,7 +142,7 @@ namespace InnoClinic.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var office = _mapper.Map<Office>(officeDto);
+            var office = _mapper.Map<Office>(officeDtoRequest);
 
             office.Receptionists.Add(receptionist);
 
