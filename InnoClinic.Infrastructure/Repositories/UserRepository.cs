@@ -21,5 +21,12 @@ namespace InnoClinic.Infrastructure.Repositories
         {
             return await DbSet.SingleOrDefaultAsync(u => u.Email.Equals(email) && u.IsActive, cancellationToken);
         }
+
+        public async Task<User?> GetPatientUserAsync(int userId, CancellationToken cancellationToken)
+        {
+            return await DbSet
+                .Include(u => u.Patient)
+                .SingleOrDefaultAsync(u => u.Id == userId, cancellationToken);
+        }
     }
 }

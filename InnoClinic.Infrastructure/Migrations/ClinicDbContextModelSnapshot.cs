@@ -71,7 +71,7 @@ namespace InnoClinic.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("InnoClinic.Domain.Entities.Office", b =>
@@ -112,7 +112,7 @@ namespace InnoClinic.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Offices");
+                    b.ToTable("Offices", (string)null);
                 });
 
             modelBuilder.Entity("InnoClinic.Domain.Entities.Patient", b =>
@@ -159,7 +159,7 @@ namespace InnoClinic.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("InnoClinic.Domain.Entities.Receptionist", b =>
@@ -205,7 +205,7 @@ namespace InnoClinic.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Receptionists");
+                    b.ToTable("Receptionists", (string)null);
                 });
 
             modelBuilder.Entity("InnoClinic.Domain.Entities.User", b =>
@@ -245,7 +245,7 @@ namespace InnoClinic.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("InnoClinic.Domain.Entities.Doctor", b =>

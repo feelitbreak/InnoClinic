@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using InnoClinic.Domain.DTOs;
+using InnoClinic.Domain.Entities;
 using InnoClinic.Domain.Enums;
 using InnoClinic.Domain.Exceptions;
 using InnoClinic.Domain.Interfaces;
@@ -30,18 +31,26 @@ namespace InnoClinic.Controllers
 
         [HttpPost("creation")]
         [Authorize(Roles = nameof(Role.Patient))]
-        public async Task<IActionResult> CreatePatientProfileAsync([FromBody] PatientProfileDto patientProfile, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreatePatientProfileAsync([FromBody] PatientProfileDto patientProfileDtoRequest, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
 
-            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken);
+            var user = await _unitOfWork.Users.GetPatientUserAsync(userId, cancellationToken);
             if (user is null)
             {
                 _logger.LogError("The user with the identifier {userId} was not found.", userId);
                 throw new NotFoundException("The user was not found.");
             }
 
-            var validationResult = await _validatorPatientProfile.ValidateAsync(patientProfile, cancellationToken);
+            if (user.Patient is not null)
+            {
+                _logger.LogError(
+                    "The user with the identifier {userId} already has a profile with the identifier {patientId}.",
+                    userId, user.Patient.Id);
+                throw new BadRequestException("You already have a profile.");
+            }
+
+            var validationResult = await _validatorPatientProfile.ValidateAsync(patientProfileDtoRequest, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -51,17 +60,44 @@ namespace InnoClinic.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var matchingProfile = await _unitOfWork.Patients.FindMatchingAsync(patientProfile, cancellationToken);
+            var matchingProfile = await _unitOfWork.Patients.FindMatchingAsync(patientProfileDtoRequest, cancellationToken);
             if (matchingProfile is null)
             {
-                _mapper.Map(patientProfile, user);
-                _unitOfWork.Users.Update(user);
+                var patient = _mapper.Map<Patient>(patientProfileDtoRequest);
+                patient.UserId = userId;
+                patient.IsLinkedToAccount = true;
+
+                await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
                 await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-                return Ok(new { patientProfile });
+                return Ok(patientProfileDtoRequest);
             }
 
-            return NotFound();
+            return RedirectToAction("ConfirmProfile", new { userId, patientProfileDtoRequest, matchingProfile });
+        }
+
+        [HttpPost("creation/popup")]
+        [Authorize(Roles = nameof(Role.Patient))]
+        public async Task<IActionResult> ConfirmProfileAsync([FromQuery] bool isMyProfile, [FromRoute] int userId, [FromRoute] PatientProfileDto patientProfileDtoRequest, [FromRoute] Patient matchingProfile, CancellationToken cancellationToken)
+        {
+            if (isMyProfile)
+            {
+                matchingProfile.UserId = userId;
+                matchingProfile.IsLinkedToAccount = true;
+
+                _unitOfWork.Patients.Update(matchingProfile);
+            }
+            else
+            {
+                var patient = _mapper.Map<Patient>(patientProfileDtoRequest);
+                patient.UserId = userId;
+                patient.IsLinkedToAccount = true;
+
+                await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
+            }
+
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return Ok(patientProfileDtoRequest);
         }
     }
 }
