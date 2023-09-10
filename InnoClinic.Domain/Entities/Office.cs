@@ -19,7 +19,7 @@ namespace InnoClinic.Domain.Entities
         [JsonIgnore]
         public List<Receptionist> Receptionists { get; } = new();
 
-        //[JsonIgnore]
-        //public List<Doctor> Doctors { get; } = new();
+        [JsonIgnore]
+        public List<Doctor> Doctors { get; } = new();
     }
 }

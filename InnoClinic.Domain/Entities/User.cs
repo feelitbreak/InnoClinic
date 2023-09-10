@@ -21,6 +21,6 @@ namespace InnoClinic.Domain.Entities
 
         public Receptionist? Receptionist { get; set; }
 
-        //public Doctor? Doctor { get; set; }
+        public Doctor? Doctor { get; set; }
     }
 }

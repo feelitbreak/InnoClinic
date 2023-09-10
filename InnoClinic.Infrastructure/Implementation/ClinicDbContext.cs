@@ -17,6 +17,8 @@ namespace InnoClinic.Infrastructure.Implementation
 
         public DbSet<Receptionist> Receptionists { get; set; }
 
+        public DbSet<Doctor> Doctors { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

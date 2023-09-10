@@ -100,7 +100,7 @@ namespace InnoClinic.Controllers
 
             office.IsActive = !office.IsActive;
             office.Receptionists.ForEach(r => r.IsActive = office.IsActive);
-            //office.Doctors.ForEach(d => d.IsActive = office.IsActive);
+            office.Doctors.ForEach(d => d.IsActive = office.IsActive);
 
             _unitOfWork.Offices.Update(office);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
