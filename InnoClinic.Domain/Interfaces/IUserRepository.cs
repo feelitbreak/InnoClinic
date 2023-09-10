@@ -1,5 +1,4 @@
-﻿using InnoClinic.Domain.DTOs;
-using InnoClinic.Domain.Entities;
+﻿using InnoClinic.Domain.Entities;
 
 namespace InnoClinic.Domain.Interfaces
 {

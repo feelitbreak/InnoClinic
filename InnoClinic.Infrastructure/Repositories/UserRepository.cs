@@ -1,7 +1,5 @@
-﻿using InnoClinic.Domain.DTOs;
-using InnoClinic.Domain.Interfaces;
+﻿using InnoClinic.Domain.Interfaces;
 using InnoClinic.Domain.Entities;
-using InnoClinic.Domain.Extensions;
 using Microsoft.EntityFrameworkCore;
 using InnoClinic.Infrastructure.Implementation;
 

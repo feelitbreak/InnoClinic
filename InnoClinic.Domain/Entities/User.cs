@@ -1,5 +1,4 @@
 ﻿using InnoClinic.Domain.Enums;
-using System.Text.Json.Serialization;
 
 namespace InnoClinic.Domain.Entities
 {

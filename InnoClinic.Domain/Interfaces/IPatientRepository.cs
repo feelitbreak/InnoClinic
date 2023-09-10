@@ -1,6 +1,5 @@
 ﻿using InnoClinic.Domain.DTOs;
 using InnoClinic.Domain.Entities;
-using System.Collections.Generic;
 
 namespace InnoClinic.Domain.Interfaces
 {
