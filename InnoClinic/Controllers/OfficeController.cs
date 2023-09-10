@@ -36,10 +36,10 @@ namespace InnoClinic.Controllers
 
             if (offices.Any())
             {
-                return NoContent();
+                return Ok(new { offices });
             }
 
-            return Ok(new { offices });
+            return NoContent();
         }
 
         [HttpGet]
