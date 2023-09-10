@@ -117,7 +117,7 @@ namespace InnoClinic.Controllers
         {
             var userId = GetUserId();
 
-            var receptionist = await _unitOfWork.Receptionists.GetReceptionistAsync(userId, cancellationToken);
+            var receptionist = await _unitOfWork.Receptionists.GetByUserIdAsync(userId, cancellationToken);
             if (receptionist is null)
             {
                 _logger.LogError("The receptionist with the user identifier {userId} was not found.", userId);

@@ -4,6 +4,6 @@ namespace InnoClinic.Domain.Interfaces
 {
     public interface IReceptionistRepository :  IGenericRepository<Receptionist>
     {
-        Task<Receptionist?> GetReceptionistAsync(int userId, CancellationToken cancellationToken);
+        Task<Receptionist?> GetByUserIdAsync(int userId, CancellationToken cancellationToken);
     }
 }
