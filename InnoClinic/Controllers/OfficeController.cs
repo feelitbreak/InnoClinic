@@ -54,7 +54,7 @@ namespace InnoClinic.Controllers
             }
 
             _logger.LogError("The office with the identifier {officeId} was not found.", officeId);
-            throw new NotFoundException("The office was not found.");
+            throw new ClinicException("The office was not found.", ExceptionCode.OfficeNotFoundException);
         }
 
         [HttpPut]
@@ -70,7 +70,7 @@ namespace InnoClinic.Controllers
                 _logger.LogError(
                     "The office with the identifier {officeId}, tied to the user with the identifier {userId}, was not found.",
                     officeId, userId);
-                throw new NotFoundException("The office was not found.");
+                throw new ClinicException("The office was not found.", ExceptionCode.OfficeNotFoundException);
             }
 
             OfficeDto.ToDomain(officeDtoRequest, office);
@@ -95,7 +95,7 @@ namespace InnoClinic.Controllers
                 _logger.LogError(
                     "The office with the identifier {officeId}, tied to the user with the identifier {userId}, was not found.",
                     officeId, userId);
-                throw new NotFoundException("The office was not found.");
+                throw new ClinicException("The office was not found.", ExceptionCode.OfficeNotFoundException);
             }
 
             office.IsActive = !office.IsActive;
@@ -121,7 +121,7 @@ namespace InnoClinic.Controllers
             if (receptionist is null)
             {
                 _logger.LogError("The receptionist with the user identifier {userId} was not found.", userId);
-                throw new NotFoundException("The user was not found.");
+                throw new ClinicException("The user was not found.", ExceptionCode.UserNotFoundException);
             }
 
             if (receptionist.OfficeId is not null)
@@ -129,7 +129,7 @@ namespace InnoClinic.Controllers
                 _logger.LogError(
                     "The receptionist with the identifier {receptionistId} is already tied to the office with the identifier {officeId}.",
                     receptionist.Id, receptionist.OfficeId);
-                throw new BadRequestException("You are already tied to an office.");
+                throw new ClinicException("You are already tied to an office.", ExceptionCode.UserIsLinkedToOfficeException);
             }
 
             var validationResult = await _validatorOffice.ValidateAsync(officeDtoRequest, cancellationToken);

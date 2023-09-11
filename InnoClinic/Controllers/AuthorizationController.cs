@@ -56,7 +56,7 @@ namespace InnoClinic.Controllers
             if (user is null)
             {
                 _logger.LogError("The user with the email {userEmail} was not found or is not active.", userSignIn.Email);
-                throw new NotFoundException("The user was not found.");
+                throw new ClinicException("The user was not found.", ExceptionCode.UserNotFoundException);
             }
 
             var passwordModel = new PasswordModel
@@ -68,7 +68,7 @@ namespace InnoClinic.Controllers
             if (!_encryptionService.IsValidPassword(userSignIn.Password, passwordModel))
             {
                 _logger.LogError("Entered incorrect password for the user with the email {userEmail}.", userSignIn.Email);
-                throw new BadRequestException("The password you've entered is incorrect.");
+                throw new ClinicException("The password you've entered is incorrect.", ExceptionCode.InvalidPasswordException);
             }
 
             var token = _tokenService.GenerateToken(user);

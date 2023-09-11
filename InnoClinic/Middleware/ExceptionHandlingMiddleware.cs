@@ -13,23 +13,41 @@ namespace InnoClinic.Middleware
             }
             catch (Exception e)
             {
-                await HandleExceptionAsync(context, e);
+                switch (e)
+                {
+                    case ClinicException clinicException:
+                        await HandleExceptionAsync(context, clinicException);
+                        break;
+                    default:
+                        await HandleExceptionAsync(context, e);
+                        break;
+                }
             }
+        }
+
+        private static async Task HandleExceptionAsync(HttpContext httpContext, ClinicException exception)
+        {
+            httpContext.Response.ContentType = "application/json";
+            httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+            var response = new
+            {
+                errorCode = exception.ErrorCode.ToString(),
+                errorMessage = exception.Message
+            };
+
+            await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
 
         private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
         {
             httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = exception switch
-            {
-                BadRequestException => StatusCodes.Status400BadRequest,
-                NotFoundException => StatusCodes.Status404NotFound,
-                _ => StatusCodes.Status500InternalServerError
-            };
+            httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
             var response = new
             {
-                error = exception.Message
+                errorCode = httpContext.Response.StatusCode.ToString(),
+                errorMessage = exception.Message
             };
 
             await httpContext.Response.WriteAsync(JsonSerializer.Serialize(response));

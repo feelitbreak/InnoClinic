@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using InnoClinic.Domain.Enums;
 using InnoClinic.Domain.Exceptions;
 
 namespace InnoClinic.Controllers
@@ -23,7 +24,7 @@ namespace InnoClinic.Controllers
             }
 
             _logger.LogError("Couldn't identify the current user from the context.");
-            throw new BadRequestException("Couldn't identify the current user.");
+            throw new ClinicException("Couldn't identify the current user.", ExceptionCode.UserNotIdentifiedException);
         }
     }
 }

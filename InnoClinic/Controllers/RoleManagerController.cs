@@ -39,7 +39,7 @@ namespace InnoClinic.Controllers
             if (user is null)
             {
                 _logger.LogError("The user with the email {userEmail} was not found or is not active.", userRole.UserEmail);
-                throw new NotFoundException("The user was not found.");
+                throw new ClinicException("The user was not found.", ExceptionCode.UserNotFoundException);
             }
 
             user.Role = userRole.Role;

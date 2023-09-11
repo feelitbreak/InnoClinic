@@ -49,7 +49,7 @@ namespace InnoClinic.Controllers
             if (user is null)
             {
                 _logger.LogError("The user with the identifier {userId} was not found.", userId);
-                throw new NotFoundException("The user was not found.");
+                throw new ClinicException("The user was not found.", ExceptionCode.UserNotFoundException);
             }
 
             user.IsEmailVerified = true;
@@ -60,7 +60,7 @@ namespace InnoClinic.Controllers
                 _logger.LogError(
                     "The user with the identifier {userId} already has a profile with the identifier {patientId}.",
                     userId, user.Patient.Id);
-                throw new BadRequestException("You already have a profile.");
+                throw new ClinicException("You already have a profile.", ExceptionCode.UserIsLinkedToProfileException);
             }
 
             var matchingProfile = await _unitOfWork.Patients.FindMatchingAsync(patientProfileDtoRequest, cancellationToken);
@@ -105,7 +105,7 @@ namespace InnoClinic.Controllers
             if (user is null)
             {
                 _logger.LogError("The user with the identifier {userId} was not found.", userId);
-                throw new NotFoundException("The user was not found.");
+                throw new ClinicException("The user was not found.", ExceptionCode.UserNotFoundException);
             }
 
             user.IsEmailVerified = true;
@@ -116,7 +116,7 @@ namespace InnoClinic.Controllers
                 _logger.LogError(
                     "The user with the identifier {userId} already has a profile with the identifier {patientId}.",
                     userId, user.Patient.Id);
-                throw new BadRequestException("You already have a profile.");
+                throw new ClinicException("You already have a profile.", ExceptionCode.UserIsLinkedToProfileException);
             }
 
             var patient = _mapper.Map<Patient>(patientProfileDtoRequest);
@@ -140,7 +140,7 @@ namespace InnoClinic.Controllers
             if (user is null)
             {
                 _logger.LogError("The user with the identifier {userId} was not found.", userId);
-                throw new NotFoundException("The user was not found.");
+                throw new ClinicException("The user was not found.", ExceptionCode.UserNotFoundException);
             }
 
             user.IsEmailVerified = true;
@@ -151,14 +151,14 @@ namespace InnoClinic.Controllers
                 _logger.LogError(
                     "The user with the identifier {userId} already has a profile with the identifier {existingPatientId}.",
                     userId, user.Patient.Id);
-                throw new BadRequestException("You already have a profile.");
+                throw new ClinicException("You already have a profile.", ExceptionCode.UserIsLinkedToProfileException);
             }
 
             var patient = await _unitOfWork.Patients.GetAsync(patientId, cancellationToken);
             if (patient is null)
             {
                 _logger.LogError("The patient with the identifier {patientId} was not found.", patientId);
-                throw new NotFoundException("The profile was not found.");
+                throw new ClinicException("The patient profile was not found.", ExceptionCode.PatientNotFoundException);
             }
 
             patient.UserId = userId;
