@@ -52,6 +52,9 @@ namespace InnoClinic.Controllers
                 throw new NotFoundException("The user was not found.");
             }
 
+            user.IsEmailVerified = true;
+            _unitOfWork.Users.Update(user);
+
             if (user.Patient is not null)
             {
                 _logger.LogError(
@@ -75,6 +78,7 @@ namespace InnoClinic.Controllers
             patient.IsLinkedToAccount = true;
 
             await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Ok(patientProfileDtoRequest);
@@ -104,6 +108,9 @@ namespace InnoClinic.Controllers
                 throw new NotFoundException("The user was not found.");
             }
 
+            user.IsEmailVerified = true;
+            _unitOfWork.Users.Update(user);
+
             if (user.Patient is not null)
             {
                 _logger.LogError(
@@ -117,6 +124,7 @@ namespace InnoClinic.Controllers
             patient.IsLinkedToAccount = true;
 
             await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
+
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Ok(patientProfileDtoRequest);
@@ -134,6 +142,9 @@ namespace InnoClinic.Controllers
                 _logger.LogError("The user with the identifier {userId} was not found.", userId);
                 throw new NotFoundException("The user was not found.");
             }
+
+            user.IsEmailVerified = true;
+            _unitOfWork.Users.Update(user);
 
             if (user.Patient is not null)
             {
@@ -156,6 +167,7 @@ namespace InnoClinic.Controllers
             _unitOfWork.Patients.Update(patient);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
             return Ok(_mapper.Map<PatientProfileDto>(patient));
         }
     }
