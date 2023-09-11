@@ -14,7 +14,7 @@ namespace InnoClinic.Infrastructure.Repositories
 
         public async Task<Receptionist?> GetByUserIdAsync(int userId, CancellationToken cancellationToken)
         {
-            return await DbSet
+            return await Entity
                 .Where(r => r.UserId == userId)
                 .FirstOrDefaultAsync(cancellationToken);
         }

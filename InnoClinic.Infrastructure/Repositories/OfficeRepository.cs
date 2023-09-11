@@ -14,7 +14,7 @@ namespace InnoClinic.Infrastructure.Repositories
 
         public async Task<Office?> GetOfficeAsync(int officeId, int userId, CancellationToken cancellationToken)
         {
-            var query = DbSet
+            var query = Entity
                 .Where(o => o.Id == officeId)
                 .Include(o => o.Receptionists);
 
