@@ -29,10 +29,20 @@ namespace InnoClinic.Controllers
             _validatorPatientProfile = validatorPatientProfile;
         }
 
-        [HttpPost("creation")]
+        [HttpPost]
         [Authorize(Roles = nameof(Role.Patient))]
         public async Task<IActionResult> CreatePatientProfileAsync([FromBody] PatientProfileDto patientProfileDtoRequest, CancellationToken cancellationToken)
         {
+            var validationResult = await _validatorPatientProfile.ValidateAsync(patientProfileDtoRequest, cancellationToken);
+
+            if (!validationResult.IsValid)
+            {
+                _logger.LogError(
+                    "The input for the patient profile creation was invalid. Validation errors: {validationErrors}",
+                    validationResult.Errors);
+                return BadRequest(validationResult.Errors);
+            }
+
             var userId = GetUserId();
 
             var user = await _unitOfWork.Users.GetPatientUserAsync(userId, cancellationToken);
@@ -50,6 +60,31 @@ namespace InnoClinic.Controllers
                 throw new BadRequestException("You already have a profile.");
             }
 
+            var matchingProfile = await _unitOfWork.Patients.FindMatchingAsync(patientProfileDtoRequest, cancellationToken);
+            if (matchingProfile is not null)
+            {
+                return Ok(new
+                {
+                    message = "A similar profile has been found, you might have already visited one of our clinics?",
+                    patientId = matchingProfile.Id
+                });
+            }
+
+            var patient = _mapper.Map<Patient>(patientProfileDtoRequest);
+            patient.UserId = userId;
+            patient.IsLinkedToAccount = true;
+
+            await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return Ok(patientProfileDtoRequest);
+
+        }
+
+        [HttpPost("new")]
+        [Authorize(Roles = nameof(Role.Patient))]
+        public async Task<IActionResult> CreateNewProfileAsync([FromBody] PatientProfileDto patientProfileDtoRequest, CancellationToken cancellationToken)
+        {
             var validationResult = await _validatorPatientProfile.ValidateAsync(patientProfileDtoRequest, cancellationToken);
 
             if (!validationResult.IsValid)
@@ -60,44 +95,68 @@ namespace InnoClinic.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var matchingProfile = await _unitOfWork.Patients.FindMatchingAsync(patientProfileDtoRequest, cancellationToken);
-            if (matchingProfile is null)
+            var userId = GetUserId();
+
+            var user = await _unitOfWork.Users.GetPatientUserAsync(userId, cancellationToken);
+            if (user is null)
             {
-                var patient = _mapper.Map<Patient>(patientProfileDtoRequest);
-                patient.UserId = userId;
-                patient.IsLinkedToAccount = true;
-
-                await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
-                await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-                return Ok(patientProfileDtoRequest);
+                _logger.LogError("The user with the identifier {userId} was not found.", userId);
+                throw new NotFoundException("The user was not found.");
             }
 
-            return RedirectToAction("ConfirmProfile", new { userId, patientProfileDtoRequest, matchingProfile });
+            if (user.Patient is not null)
+            {
+                _logger.LogError(
+                    "The user with the identifier {userId} already has a profile with the identifier {patientId}.",
+                    userId, user.Patient.Id);
+                throw new BadRequestException("You already have a profile.");
+            }
+
+            var patient = _mapper.Map<Patient>(patientProfileDtoRequest);
+            patient.UserId = userId;
+            patient.IsLinkedToAccount = true;
+
+            await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return Ok(patientProfileDtoRequest);
         }
 
-        [HttpPost("creation/popup")]
+        [HttpPatch("confirm")]
         [Authorize(Roles = nameof(Role.Patient))]
-        public async Task<IActionResult> ConfirmProfileAsync([FromQuery] bool isMyProfile, [FromRoute] int userId, [FromRoute] PatientProfileDto patientProfileDtoRequest, [FromRoute] Patient matchingProfile, CancellationToken cancellationToken)
+        public async Task<IActionResult> ConfirmProfileAsync([FromQuery] int patientId, CancellationToken cancellationToken)
         {
-            if (isMyProfile)
-            {
-                matchingProfile.UserId = userId;
-                matchingProfile.IsLinkedToAccount = true;
+            var userId = GetUserId();
 
-                _unitOfWork.Patients.Update(matchingProfile);
-            }
-            else
+            var user = await _unitOfWork.Users.GetPatientUserAsync(userId, cancellationToken);
+            if (user is null)
             {
-                var patient = _mapper.Map<Patient>(patientProfileDtoRequest);
-                patient.UserId = userId;
-                patient.IsLinkedToAccount = true;
-
-                await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
+                _logger.LogError("The user with the identifier {userId} was not found.", userId);
+                throw new NotFoundException("The user was not found.");
             }
+
+            if (user.Patient is not null)
+            {
+                _logger.LogError(
+                    "The user with the identifier {userId} already has a profile with the identifier {existingPatientId}.",
+                    userId, user.Patient.Id);
+                throw new BadRequestException("You already have a profile.");
+            }
+
+            var patient = await _unitOfWork.Patients.GetAsync(patientId, cancellationToken);
+            if (patient is null)
+            {
+                _logger.LogError("The patient with the identifier {patientId} was not found.", patientId);
+                throw new NotFoundException("The profile was not found.");
+            }
+
+            patient.UserId = userId;
+            patient.IsLinkedToAccount = true;
+
+            _unitOfWork.Patients.Update(patient);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return Ok(patientProfileDtoRequest);
+            return Ok(_mapper.Map<PatientProfileDto>(patient));
         }
     }
 }

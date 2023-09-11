@@ -17,7 +17,7 @@ namespace InnoClinic.Infrastructure.Repositories
         public async Task<Patient?> FindMatchingAsync(PatientProfileDto patientProfile,
             CancellationToken cancellationToken)
         {
-            return await DbSet.FirstOrDefaultAsync(p =>
+            return await Entity.FirstOrDefaultAsync(p =>
                     ((patientProfile.FirstName.Equals(p.FirstName) && patientProfile.LastName.Equals(p.LastName) && patientProfile.MiddleName.Equals(p.MiddleName))
                     || (patientProfile.FirstName.Equals(p.FirstName) && patientProfile.LastName.Equals(p.LastName) && patientProfile.DateOfBirth.Equals(p.DateOfBirth))
                     || (patientProfile.FirstName.Equals(p.FirstName) && patientProfile.MiddleName.Equals(p.MiddleName) && patientProfile.DateOfBirth.Equals(p.DateOfBirth))
