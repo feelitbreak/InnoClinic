@@ -66,6 +66,10 @@ namespace InnoClinic.Controllers
             var matchingProfile = await _unitOfWork.Patients.FindMatchingAsync(patientProfileDtoRequest, cancellationToken);
             if (matchingProfile is not null)
             {
+                _logger.LogInformation(
+                    "A matching profile with the identifier {matchingProfileId} has been found for the user with the identifier {userId}.",
+                    matchingProfile.Id, userId);
+
                 return Ok(new
                 {
                     message = "A similar profile has been found, you might have already visited one of our clinics?",
@@ -81,8 +85,11 @@ namespace InnoClinic.Controllers
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Ok(patientProfileDtoRequest);
+            _logger.LogInformation(
+                "A new patient profile with the identifier {patientId} has been added to the database.",
+                patient.Id);
 
+            return Ok(patientProfileDtoRequest);
         }
 
         [HttpPost("new")]
@@ -127,6 +134,10 @@ namespace InnoClinic.Controllers
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+            _logger.LogInformation(
+                "A new patient profile with the identifier {patientId} has been added to the database.",
+                patient.Id);
+
             return Ok(patientProfileDtoRequest);
         }
 
@@ -167,6 +178,10 @@ namespace InnoClinic.Controllers
             _unitOfWork.Patients.Update(patient);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            _logger.LogInformation(
+                "The patient profile with the identifier {patientId} has been linked to the user with the identifier {userId}.",
+                patient.Id, userId);
 
             return Ok(_mapper.Map<PatientProfileDto>(patient));
         }
