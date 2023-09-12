@@ -1,5 +1,5 @@
-﻿using InnoClinic.Domain.Enums;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using InnoClinic.Domain.Enums;
 
 namespace InnoClinic.Domain.Entities
 {
@@ -13,9 +13,17 @@ namespace InnoClinic.Domain.Entities
 
         public Role Role { get; set; }
 
-        public int? OfficeId { get; set; }
+        public byte[]? Photo { get; set; }
+
+        public bool IsEmailVerified { get; set; }
 
         [JsonIgnore]
-        public Office? Office { get; set; }
+        public Patient? Patient { get; set; }
+
+        [JsonIgnore]
+        public Receptionist? Receptionist { get; set; }
+
+        [JsonIgnore]
+        public Doctor? Doctor { get; set; }
     }
 }
