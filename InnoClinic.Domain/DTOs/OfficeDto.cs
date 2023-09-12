@@ -16,8 +16,6 @@ namespace InnoClinic.Domain.DTOs
 
         public long RegistryPhoneNumber { get; set; }
 
-        public bool IsActive { get; set; }
-
         public static void ToDomain(OfficeDto officeDto, Office office)
         {
             office.City = officeDto.City.Trim();

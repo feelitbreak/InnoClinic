@@ -17,6 +17,9 @@ namespace InnoClinic.Domain.Entities
         public long RegistryPhoneNumber { get; set; }
 
         [JsonIgnore]
-        public List<User> Users { get; } = new();
+        public List<Receptionist> Receptionists { get; } = new();
+
+        [JsonIgnore]
+        public List<Doctor> Doctors { get; } = new();
     }
 }

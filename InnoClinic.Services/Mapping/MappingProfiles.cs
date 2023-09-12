@@ -10,6 +10,8 @@ namespace InnoClinic.Services.Mapping
         {
             CreateMap<UserSignUpDto, User>();
             CreateMap<OfficeDto, Office>();
+            CreateMap<PatientProfileDto, Patient>();
+            CreateMap<Patient, PatientProfileDto>();
         }
     }
 }

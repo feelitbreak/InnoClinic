@@ -36,10 +36,10 @@ namespace InnoClinic.Controllers
 
             if (offices.Any())
             {
-                return NoContent();
+                return Ok(new { offices });
             }
 
-            return Ok(new { offices });
+            return NoContent();
         }
 
         [HttpGet]
@@ -54,7 +54,7 @@ namespace InnoClinic.Controllers
             }
 
             _logger.LogError("The office with the identifier {officeId} was not found.", officeId);
-            throw new NotFoundException("The office was not found.");
+            throw new ClinicException("The office was not found.", ExceptionCode.OfficeNotFoundException);
         }
 
         [HttpPut]
@@ -70,7 +70,7 @@ namespace InnoClinic.Controllers
                 _logger.LogError(
                     "The office with the identifier {officeId}, tied to the user with the identifier {userId}, was not found.",
                     officeId, userId);
-                throw new NotFoundException("The office was not found.");
+                throw new ClinicException("The office was not found.", ExceptionCode.OfficeNotFoundException);
             }
 
             OfficeDto.ToDomain(officeDtoRequest, office);
@@ -95,11 +95,12 @@ namespace InnoClinic.Controllers
                 _logger.LogError(
                     "The office with the identifier {officeId}, tied to the user with the identifier {userId}, was not found.",
                     officeId, userId);
-                throw new NotFoundException("The office was not found.");
+                throw new ClinicException("The office was not found.", ExceptionCode.OfficeNotFoundException);
             }
 
             office.IsActive = !office.IsActive;
-            office.Users.ForEach(u => u.IsActive = office.IsActive);
+            office.Receptionists.ForEach(r => r.IsActive = office.IsActive);
+            office.Doctors.ForEach(d => d.IsActive = office.IsActive);
 
             _unitOfWork.Offices.Update(office);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -112,26 +113,26 @@ namespace InnoClinic.Controllers
         }
 
         [HttpPost("creation")]
-        public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDto officeInput, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddOfficeAsync([FromBody] OfficeDto officeDtoRequest, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
 
-            var user = await _unitOfWork.Users.GetAsync(userId, cancellationToken);
-            if (user is null)
+            var receptionist = await _unitOfWork.Receptionists.GetByUserIdAsync(userId, cancellationToken);
+            if (receptionist is null)
             {
-                _logger.LogError("The user with the identifier {userId} was not found.", userId);
-                throw new NotFoundException("The user was not found.");
+                _logger.LogError("The receptionist with the user identifier {userId} was not found.", userId);
+                throw new ClinicException("The user was not found.", ExceptionCode.UserNotFoundException);
             }
 
-            if (user.OfficeId is not null)
+            if (receptionist.OfficeId is not null)
             {
                 _logger.LogError(
-                    "The user with the identifier {userId} is already tied to the office with the identifier {officeId}.",
-                    userId, user.OfficeId);
-                throw new BadRequestException("You are already tied to an office.");
+                    "The receptionist with the identifier {receptionistId} is already tied to the office with the identifier {officeId}.",
+                    receptionist.Id, receptionist.OfficeId);
+                throw new ClinicException("You are already tied to an office.", ExceptionCode.UserIsLinkedToOfficeException);
             }
 
-            var validationResult = await _validatorOffice.ValidateAsync(officeInput, cancellationToken);
+            var validationResult = await _validatorOffice.ValidateAsync(officeDtoRequest, cancellationToken);
 
             if (!validationResult.IsValid)
             {
@@ -141,9 +142,9 @@ namespace InnoClinic.Controllers
                 return BadRequest(validationResult.Errors);
             }
 
-            var office = _mapper.Map<Office>(officeInput);
+            var office = _mapper.Map<Office>(officeDtoRequest);
 
-            office.Users.Add(user);
+            office.Receptionists.Add(receptionist);
 
             await _unitOfWork.Offices.AddAsync(office, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
